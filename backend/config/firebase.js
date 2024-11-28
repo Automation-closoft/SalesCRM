@@ -1,7 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
-import { toast } from "react-toastify";
 
 const firebaseConfig = {
   apiKey: "AIzaSyB4nDvaS7IB7bYow4AeW7E3IUA7R5sSK54",
