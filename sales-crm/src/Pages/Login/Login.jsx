@@ -5,7 +5,7 @@ import {
   login,
   googleLogin,
   microsoftLogin,
-} from "../../../../backend/config/firebase";
+} from "../../firebase";
 import { assets } from "../../assets/assets";
 import { useNavigate } from "react-router-dom";
 
