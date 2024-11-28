@@ -3,7 +3,7 @@ import { assets } from '../../assets/assets';
 import { NavLink } from 'react-router-dom';
 import Add from '../../Pages/Add/Add';
 import ListView from '../../Pages/ListView/ListView';
-import './Dashboard.css';
+import './DashBoard.css';
 
 const Dashboard = () => {
   const [selectedSection, setSelectedSection] = useState('add'); // Default to Add
