@@ -1,0 +1,84 @@
+.dashboard {
+  display: flex;
+  height: 100vh;
+  overflow: hidden; /* Removes scrollbars */
+}
+
+.sidebar {
+  width: 18%;
+  min-height: 100vh;
+  border-right: 1.5px solid #a9a9a9;
+  background-color: #f4f4f4;
+  font-size: max(1vw, 10px);
+}
+
+.sidebar-options {
+  padding-top: 50px;
+  padding-left: 10%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sidebar-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-left: 3px solid transparent;
+  padding: 10px 15px;
+  cursor: pointer;
+  background-color: #ffffff;
+  color: #333;
+  transition: all 0.3s ease-in-out;
+}
+
+.sidebar-option img {
+  width: 30px;
+}
+
+.sidebar-option p {
+  margin: 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+.sidebar-option:hover {
+  background-color: #ffe6e6;
+  border-left: 3px solid #f00000;
+  color: #f00000;
+}
+
+.sidebar-option.active {
+  background-color: #ff2a0049;
+  border-left: 3px solid #f00000;
+  font-weight: bold;
+  color: #f00000;
+}
+
+.content {
+  flex-grow: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: #f9f9f9;
+}
+
+/* Remove scrollbar but maintain scroll functionality */
+.content::-webkit-scrollbar {
+  display: none;
+}
+
+.content {
+  -ms-overflow-style: none; /* IE 10+ */
+  scrollbar-width: none;    /* Firefox */
+}
+
+@media (max-width: 900px) {
+  .sidebar-option p {
+      display: none;
+  }
+
+  .sidebar {
+      width: 60px; /* Compact sidebar */
+  }
+}
