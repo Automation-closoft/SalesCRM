@@ -2,15 +2,24 @@ import React, { useEffect, useState } from 'react';
 import './ListView.css'; // CSS for styling the table
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { getAllClients } from '../../../../backend/controllers/populateDefaults';
 
 const ListView = () => {
   const [clients, setClients] = useState([]);
   useEffect(() => {
-    getAllClients();
+    const fetchClients = async () => {
+      try {
+        const response = await fetch('http://localhost:4000/api/salesCRM/all');
+        if (!response.ok) throw new Error('Failed to fetch client data');
+        const data = await response.json();
+        setClients(data);
+      } catch (error) {
+        toast.error('Error fetching client data: ' + error.message);
+      }
+    };
+    fetchClients();
   }, []);
 
-
+  
 
   return (
     <div className="list-container">
@@ -43,7 +52,7 @@ const ListView = () => {
               <td>{client.typeOfCustomer}</td>
               <td>{client.projectName}</td>
               <td>{client.application}</td>
-              <td>{client.location || "N/A"}</td>
+              <td>{client.customerLocation || "N/A"}</td>
               <td>{client.sow}</td>
               <td>{client.brand}</td>
               <td>{client.quotedValue.toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
