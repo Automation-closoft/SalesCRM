@@ -125,5 +125,35 @@ const deleteClient = async (req, res) => {
   }
 };
 
+const updateClientStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { statusOfRFQ } = req.body;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid client ID format" });
+    }
+    const updatedClient = await SalesCrm.findByIdAndUpdate(
+      id,
+      { statusOfRFQ },
+      { new: true }
+    );
+    if (!updatedClient) {
+      return res.status(404).json({ message: "Client not found" });
+    }
+    res.status(200).json(updatedClient);
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to update client status",
+      error: error.message,
+    });
+  }
+};
 
-export {populateDefaults, addClient, getAllClients,deleteClient,clientDetail}
+export {
+  populateDefaults,
+  addClient,
+  getAllClients,
+  deleteClient,
+  clientDetail,
+  updateClientStatus,
+};

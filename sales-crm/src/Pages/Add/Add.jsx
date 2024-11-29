@@ -87,7 +87,7 @@ function Add() {
           [name]: [...prev[name], customValue],
         }));
 
-        await fetch(`http://localhost:4000/api/salesCRM/addCustomOption`, {
+        await fetch(`https://salescrm-backend.onrender.com//api/salesCRM/addCustomOption`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ category: name, value: customValue }),
@@ -102,7 +102,7 @@ function Add() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:4000/api/salesCRM/add", {
+      const response = await fetch("https://salescrm-backend.onrender.com//api/salesCRM/add", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
