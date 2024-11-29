@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./ListView.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import SalesReport from "../../Components/SalesReport/SalesReport";
 
 const ListView = () => {
   const [clients, setClients] = useState([]);
@@ -50,7 +51,6 @@ const ListView = () => {
       "Are you sure you want to delete this client?"
     );
     if (!confirmDelete) return;
-
     try {
       const response = await fetch(
         `https://salescrm-backend.onrender.com/api/salesCRM/${id}`,
@@ -70,6 +70,7 @@ const ListView = () => {
     <div className="list-container">
       <ToastContainer />
       <h2>Client List</h2>
+      {/* <SalesReport/> */}
       <table className="client-table">
         <thead>
           <tr>
@@ -141,5 +142,4 @@ const ListView = () => {
     </div>
   );
 };
-
 export default ListView;

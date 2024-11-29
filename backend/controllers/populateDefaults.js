@@ -149,6 +149,27 @@ const updateClientStatus = async (req, res) => {
   }
 };
 
+const getDropdownData = async (req, res) => {
+  try {
+    const typeOfCustomers = await TypeOfCustomer.find();
+    const applications = await Application.find();
+    const sows = await SOW.find();
+    const brands = await Brand.find();
+    
+    res.json({
+      success: true,
+      typeOfCustomers,
+      applications,
+      sows,
+      brands,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Error fetching dropdown data" });
+  }
+};
+
+export { getDropdownData };
+
 export {
   populateDefaults,
   addClient,

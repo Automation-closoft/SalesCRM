@@ -1,0 +1,151 @@
+/* General Styling for SalesReport */
+.sales-report-container {
+    background-color: #ffffff;
+    padding: 30px;
+    margin-top: 30px;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+    text-align: center;
+  }
+  
+  .sales-report-container h3 {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+  }
+  
+  /* Report Filters Section */
+  .report-filters {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+  
+  .report-filters select,
+  .report-filters input {
+    padding: 8px 14px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #333;
+    background-color: #fff;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    width: 45%;
+    margin-bottom: 10px;
+  }
+  
+  .report-filters select:focus,
+  .report-filters input:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+  }
+  
+  .report-filters .date-range input {
+    width: 100%;
+  }
+  
+  /* Date Picker Section */
+  .date-picker {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 20px;
+  }
+  
+  .date-picker input {
+    width: 48%;
+  }
+  
+  /* Button Styling */
+  .report-button {
+    background-color: #3498db;
+    color: white;
+    padding: 12px 18px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .report-button:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+  }
+  
+  .report-button:active {
+    transform: translateY(0);
+  }
+  
+  /* Sales Data Section */
+  .sales-data {
+    margin-top: 30px;
+  }
+  
+  .sales-data .report-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+  }
+  
+  .sales-data .report-table th,
+  .sales-data .report-table td {
+    padding: 12px 20px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 1rem;
+  }
+  
+  .sales-data .report-table th {
+    background-color: #3498db;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid #ddd;
+  }
+  
+  .sales-data .report-table td {
+    border-bottom: 1px solid #ddd;
+    color: #555;
+  }
+  
+  .sales-data .report-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .sales-data .report-table tr:hover {
+    background-color: #ecf0f1;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Empty State */
+  .empty-state {
+    font-size: 1.2rem;
+    color: #7f8c8d;
+    margin-top: 20px;
+    font-weight: 500;
+  }
+  
+  @media (max-width: 768px) {
+    .sales-report-container {
+      padding: 20px;
+    }
+  
+    .report-filters select,
+    .report-filters input {
+      width: 100%;
+    }
+  
+    .report-button {
+      width: 100%;
+    }
+  }
+  
