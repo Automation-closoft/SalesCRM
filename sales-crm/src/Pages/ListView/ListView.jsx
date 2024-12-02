@@ -70,7 +70,7 @@ const ListView = () => {
     <div className="list-container">
       <ToastContainer />
       <h2>Client List</h2>
-      {/* <SalesReport/> */}
+      <SalesReport/>
       <table className="client-table">
         <thead>
           <tr>

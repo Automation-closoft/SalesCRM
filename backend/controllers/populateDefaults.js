@@ -156,7 +156,7 @@ const getDropdownData = async (req, res) => {
     const sows = await SOW.find();
     const brands = await Brand.find();
     
-    res.json({
+    res.status(200).json({
       success: true,
       typeOfCustomers,
       applications,
@@ -168,7 +168,24 @@ const getDropdownData = async (req, res) => {
   }
 };
 
-export { getDropdownData };
+const reportGen =async (req,res) => {
+  try {
+    const { reportType, year, month, quarter, customStartDate, customEndDate } = req.body;
+    let query = {};
+    if (reportType === 'yearly') {
+      query = { rfqDate: { $gte: `${year}-01-01`, $lte: `${year}-12-31` } };
+    } else if (reportType === 'quarterly') {
+      const startMonth = (quarter - 1) * 3 + 1;
+      const endMonth = startMonth + 2;
+      query = { rfqDate: { $gte: `${year}-${startMonth}-01`, $lte: `${year}-${endMonth}-31` } };
+    } else if (reportType === 'custom') {
+      query = { rfqDate: { $gte: customStartDate, $lte: customEndDate } };
+    }
+    const report = await SalesCrm.find(query);
+    res.status(200).json({ success: true, report });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to generate report.' });
+  }};
 
 export {
   populateDefaults,
@@ -177,4 +194,6 @@ export {
   deleteClient,
   clientDetail,
   updateClientStatus,
+  getDropdownData,
+  reportGen,
 };

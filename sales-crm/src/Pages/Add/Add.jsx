@@ -58,6 +58,8 @@ function Add() {
 
   const [formData, setFormData] = useState({
     customerName: '',
+    customerLocation: '',
+    customerPOC: '',
     rfqDate: '',
     typeOfCustomer: '',
     projectName: '',
@@ -113,6 +115,8 @@ function Add() {
         setFormData({
           customerName: '',
           enquiryMonth: '',
+          customerLocation: '',
+          customerPOC: '',
           customerCategory: '',
           projectName: '',
           application: '',
@@ -149,7 +153,14 @@ function Add() {
             name="customerLocation"
             placeholder="Customer Location"
             onChange={handleChange}
-            value={formData.customerocation}
+            value={formData.customerLocation}
+            required
+          />
+          <input
+            name="customerPOC"
+            placeholder="Customer Point of Contact"
+            onChange={handleChange}
+            value={formData.customerPOC}
             required
           />
           <input
