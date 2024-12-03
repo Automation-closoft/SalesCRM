@@ -1,0 +1,88 @@
+.detailed-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    max-width: 800px;
+    margin: 0 auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  h2 {
+    text-align: center;
+    color: #333;
+  }
+  
+  .detail-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .detail-form label {
+    flex: 1 1 100%;
+    font-weight: bold;
+  }
+  
+  .detail-form input {
+    flex: 1 1 calc(50% - 10px);
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .save-button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .save-button:hover {
+    background-color: #45a049;
+  }
+  
+  .remarks-section {
+    margin-top: 30px;
+  }
+  
+  .remarks-section h3 {
+    color: #333;
+  }
+  
+  .remarks-section ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .remarks-section li {
+    background-color: #e8e8e8;
+    padding: 8px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+  }
+  
+  .remarks-section textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .add-remark-button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .add-remark-button:hover {
+    background-color: #0056b3;
+  }
+  

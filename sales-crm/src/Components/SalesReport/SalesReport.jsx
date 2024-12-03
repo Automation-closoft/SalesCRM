@@ -4,7 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "./SalesReport.css";
 import { jsPDF } from "jspdf";
 
-const SalesReport = () => {
+const SalesReport = ({ onReportGenerated }) => {
   const [reportType, setReportType] = useState("yearly");
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState("Jan");
@@ -85,7 +85,11 @@ const SalesReport = () => {
       y += 10;
     });
 
-    doc.save("sales_report.pdf");
+    const pdfName = `sales_report_${new Date().toISOString()}.pdf`;
+    doc.save(pdfName);
+
+    // Save report data (e.g., in a list for the ReportsSection)
+    onReportGenerated({ reportType, date: new Date(), pdfName });
   };
 
   return (
@@ -93,6 +97,7 @@ const SalesReport = () => {
       <ToastContainer />
       <h2>Generate Sales Report</h2>
 
+      {/* Report Type and Date Selection */}
       <div>
         <label>Report Type: </label>
         <select onChange={(e) => setReportType(e.target.value)} value={reportType}>
@@ -115,6 +120,7 @@ const SalesReport = () => {
           </select>
         </div>
       )}
+
 
       {reportType === "half-year" && (
         <div>

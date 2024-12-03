@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./ListView.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import SalesReport from "../../Components/SalesReport/SalesReport";
 
 const ListView = () => {
   const [clients, setClients] = useState([]);
   const [statuses] = useState(["Yet to quote", "Req gathered", "Follow up"]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchClients = async () => {
@@ -70,7 +71,6 @@ const ListView = () => {
     <div className="list-container">
       <ToastContainer />
       <h2>Client List</h2>
-      <SalesReport/>
       <table className="client-table">
         <thead>
           <tr>
@@ -91,55 +91,66 @@ const ListView = () => {
           </tr>
         </thead>
         <tbody>
-          {clients.map((client, index) => (
-            <tr key={client._id}>
-              <td>{index + 1}</td>
-              <td>
-                {new Date(client.rfqDate).toLocaleString("default", {
-                  month: "long",
-                  year: "numeric",
-                })}
-              </td>
-              <td>{client.customerName}</td>
-              <td>{client.typeOfCustomer}</td>
-              <td>{client.projectName}</td>
-              <td>{client.application}</td>
-              <td>{client.customerLocation || "N/A"}</td>
-              <td>{client.sow}</td>
-              <td>{client.brand}</td>
-              <td>
-                {client.quotedValue.toLocaleString("en-IN", {
-                  style: "currency",
-                  currency: "INR",
-                })}
-              </td>
-              <td>{client.expectedClosureMonth || "N/A"}</td>
-              <td>
-                <select
-                  value={client.statusOfRFQ}
-                  onChange={(e) => handleStatusChange(client._id, e.target.value)}
-                >
-                  {statuses.map((status) => (
-                    <option key={status} value={status}>
-                      {status}
-                    </option>
-                  ))}
-                </select>
-              </td>
-              <td>{client.remarks.join(", ")}</td>
-              <td>
-                <button
-                  className="delete-button"
-                  onClick={() => handleDeleteClient(client._id)}
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
+  {clients.map((client, index) => (
+    <tr
+      key={client._id}
+      className="client-row"
+      onClick={() => navigate(`/details/${client._id}`)}
+      style={{ cursor: "pointer" }}
+    >
+      <td>{index + 1}</td>
+      <td>
+        {new Date(client.rfqDate).toLocaleString("default", {
+          month: "long",
+          year: "numeric",
+        })}
+      </td>
+      <td>{client.customerName}</td>
+      <td>{client.typeOfCustomer}</td>
+      <td>{client.projectName}</td>
+      <td>{client.application}</td>
+      <td>{client.customerLocation || "N/A"}</td>
+      <td>{client.sow}</td>
+      <td>{client.brand}</td>
+      <td>
+        {client.quotedValue.toLocaleString("en-IN", {
+          style: "currency",
+          currency: "INR",
+        })}
+      </td>
+      <td>{client.expectedClosureMonth || "N/A"}</td>
+      <td>
+        <select
+          value={client.statusOfRFQ}
+          onClick={(e) => e.stopPropagation()} // Prevent triggering the row click
+          onChange={(e) => handleStatusChange(client._id, e.target.value)}
+        >
+          {statuses.map((status) => (
+            <option key={status} value={status}>
+              {status}
+            </option>
           ))}
-        </tbody>
+        </select>
+      </td>
+      <td>{client.remarks.join(", ")}</td>
+      <td>
+        <button
+          className="delete-button"
+          onClick={(e) => {
+            e.stopPropagation(); // Prevent triggering the row click
+            handleDeleteClient(client._id);
+          }}
+        >
+          Delete
+        </button>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
       </table>
     </div>
   );
 };
+
 export default ListView;

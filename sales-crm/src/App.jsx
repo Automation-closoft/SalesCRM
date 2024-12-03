@@ -18,7 +18,8 @@ const App = () => {
           <Route path="/dashboard" element={<Dashboard/>} />
           <Route path="/add" element={<Add />} />
           <Route path="/list" element={<ListView />} />
-          <Route path="/detail" element={<DetailedView />} />
+          <Route path="/details/:clientId" element={<DetailedView />} />
+          <Route path="*" element={<h1>404 - Page Not Found</h1>} />
         </Routes>
       </div>
     </>

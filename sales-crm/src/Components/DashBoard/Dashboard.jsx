@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 import Add from '../../Pages/Add/Add';
 import ListView from '../../Pages/ListView/ListView';
 import './DashBoard.css';
+import ReportsSection from '../../Pages/ReportsSection/ReportsSection';
 
 const Dashboard = () => {
   const [selectedSection, setSelectedSection] = useState('add'); // Default to Add
@@ -29,7 +30,7 @@ const Dashboard = () => {
       <div className='content'>
         {selectedSection === 'add' && <Add />}
         {selectedSection === 'list' && <ListView />}
-        {selectedSection === 'reports' && <p>Reports Section</p>}
+        {selectedSection === 'reports' && <ReportsSection/>}
       </div>
     </div>
   );
