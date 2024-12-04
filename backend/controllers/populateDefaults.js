@@ -1,32 +1,30 @@
 import { TypeOfCustomer, Application, SOW, Brand, SalesCrm } from "../models/crmModel.js";
 import mongoose from 'mongoose';
-
-
 const populateDefaults = async () => {
   try {
     await TypeOfCustomer.insertMany([
-      { name: "Machine Builders" }, { name: "OEM/MFG" }, { name: "PID" }, 
-      { name: "TSC" }, { name: "PnC" }, { name: "PSI" }, { name: "PSU" }, 
+      { name: "Machine Builders" }, { name: "OEM/MFG" }, { name: "PID" },
+      { name: "TSC" }, { name: "PnC" }, { name: "PSI" }, { name: "PSU" },
       { name: "EPC/MEP" }
     ]);
 
     await Application.insertMany([
-      { name: "SG/DG Sych" }, { name: "Testing Bench/EOL/SPM" }, 
-      { name: "Water & WW Treatment" }, { name: "Energy Management" }, 
-      { name: "HVAC/BMS/CPM" }, { name: "Discrete Manufacturing" }, 
+      { name: "SG/DG Sych" }, { name: "Testing Bench/EOL/SPM" },
+      { name: "Water & WW Treatment" }, { name: "Energy Management" },
+      { name: "HVAC/BMS/CPM" }, { name: "Discrete Manufacturing" },
       { name: "Metering Skids" }
     ]);
 
     await SOW.insertMany([
       { name: "Backend Development & Testing" }, { name: "EMS (Shop Floor)" },
-      { name: "EMS (Site)" }, { name: "Engineering Design" }, 
-      { name: "Consultant Documentation" }, { name: "Project (E2E)" }, 
+      { name: "EMS (Site)" }, { name: "Engineering Design" },
+      { name: "Consultant Documentation" }, { name: "Project (E2E)" },
       { name: "Trading" }, { name: "OD & STC" }
     ]);
 
     await Brand.insertMany([
-      { name: "Siemens" }, { name: "Schneider" }, { name: "Rockwell" }, 
-      { name: "Mitsubishi" }, { name: "Delta" }, { name: "Omron" }, 
+      { name: "Siemens" }, { name: "Schneider" }, { name: "Rockwell" },
+      { name: "Mitsubishi" }, { name: "Delta" }, { name: "Omron" },
       { name: "GE" }, { name: "ABB" }, { name: "Others" }
     ]);
 
@@ -35,7 +33,6 @@ const populateDefaults = async () => {
     console.error("Error populating dropdowns:", error);
   }
 };
-
 const addClient = async (req, res) => {
   try {
     if (!req.body.customerName || !req.body.rfqDate || !req.body.projectName) {
@@ -187,6 +184,31 @@ const reportGen =async (req,res) => {
     res.status(500).json({ success: false, message: 'Failed to generate report.' });
   }};
 
+  const addCustomInput = async (req, res) => {
+    try {
+      const { typeOfCustomer, application, sow, brand } = req.body;
+      if (typeOfCustomer) {
+        const newType = new TypeOfCustomer({ name: typeOfCustomer });
+        await newType.save();
+      }
+      if (application) {
+        const newApp = new Application({ name: application });
+        await newApp.save();
+      }
+      if (sow) {
+        const newSow = new SOW({ name: sow });
+        await newSow.save();
+      }
+      if (brand) {
+        const newBrand = new Brand({ name: brand });
+        await newBrand.save();
+      }
+      res.status(200).json({ message: 'Custom inputs added successfully!' });
+    } catch (error) {
+      res.status(500).json({ message: 'Error adding custom inputs', error: error.message });
+    }
+  };
+
 export {
   populateDefaults,
   addClient,
@@ -196,4 +218,5 @@ export {
   updateClientStatus,
   getDropdownData,
   reportGen,
+  addCustomInput,
 };
