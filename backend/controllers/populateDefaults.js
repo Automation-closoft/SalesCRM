@@ -152,7 +152,6 @@ const getDropdownData = async (req, res) => {
     const applications = await Application.find();
     const sows = await SOW.find();
     const brands = await Brand.find();
-    
     res.status(200).json({
       success: true,
       typeOfCustomers,

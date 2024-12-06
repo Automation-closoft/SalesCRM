@@ -33,20 +33,39 @@ function Add() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const fetchOptions = async (name) => {
+  const fetchDropdowns = async () => {
     try {
-      const response = await fetch(`https://salescrm-backend.onrender.com/api/${name}`);
+      const response = await fetch(`https://salescrm-backend.onrender.com/api/dropdowns`);
       if (response.ok) {
         const data = await response.json();
-        setCustomOptions((prev) => ({
-          ...prev,
-          [name]: data.map((item) => ({ id: item._id, name: item.name })),
-        }));
+  
+        // Set options for each dropdown
+        setCustomOptions({
+          typeOfCustomers: data.typeOfCustomers.map((item) => ({
+            id: item._id,
+            name: item.name,
+          })),
+          applications: data.applications.map((item) => ({
+            id: item._id,
+            name: item.name,
+          })),
+          sows: data.sows.map((item) => ({
+            id: item._id,
+            name: item.name,
+          })),
+          brands: data.brands.map((item) => ({
+            id: item._id,
+            name: item.name,
+          })),
+        });
+      } else {
+        console.error("Failed to fetch dropdown data:", response.statusText);
       }
     } catch (err) {
-      console.error(`Failed to fetch ${name} options:`, err);
+      console.error("Failed to fetch dropdown data:", err);
     }
   };
+  
 
   const handleAddCustomOption = async (name) => {
     const customValue = prompt(`Add a new ${name}:`);
@@ -59,7 +78,7 @@ function Add() {
         });
         if (response.ok) {
           alert(`${name} added successfully!`);
-          fetchOptions(name); // Refresh the dropdown options
+          fetchOptions(name);
         } else {
           setError(`Failed to add new ${name}`);
         }
@@ -91,7 +110,7 @@ function Add() {
           currency: '',
           application: '',
           brand: '',
-          expectedClosureMonth: '', // Reset expectedClosureMonth
+          expectedClosureMonth: '', 
           natureOfRFQ: '',
           statusOfRFQ: '',
           remarks: '',
@@ -105,7 +124,7 @@ function Add() {
   };
 
   React.useEffect(() => {
-    ['typeOfCustomer', 'application', 'sow', 'brand'].forEach(fetchOptions);
+    fetchDropdowns();
   }, []);
 
   return (
