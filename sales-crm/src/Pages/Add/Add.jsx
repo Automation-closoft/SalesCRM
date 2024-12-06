@@ -2,60 +2,6 @@ import React, { useState } from 'react';
 import './Add.css';
 
 function Add() {
-  const initialOptions = {
-    typeOfCustomer: [
-      "MB - Machine Builders",
-      "OEM/MFG - Original Equipment Manufacturer/Manufacturer",
-      "PID - Process Industries",
-      "TSC - Technology Service Companies",
-      "PnC - Principals and Consultants",
-      "PSI - Panel & System Integrators",
-      "PSU - Public Sector Units",
-      "EPC/MEP - Engineering Procurement Construction / Mechanical, Electrical, Plumbing",
-    ],
-    sow: [
-      "Backend Development & Testing",
-      "EMS (Shop Floor)",
-      "EMS (Site)",
-      "Engineering Design",
-      "Consultant Documentation",
-      "Project (E2E)",
-      "Trading",
-      "OD & STC",
-    ],
-    application: [
-      "SG/DG Sync",
-      "Testing Bench/EOL/SPM",
-      "Water & WW Treatment",
-      "Energy Management",
-      "HVAC/BMS/CPM",
-      "Discrete Manufacturing",
-      "Metering Skids",
-    ],
-    brand: [
-      "Siemens",
-      "Schneider",
-      "Rockwell",
-      "Mitsubishi",
-      "Delta",
-      "Omron",
-      "GE",
-      "ABB",
-      "Others",
-    ],
-    natureOfRFQ: [
-      "Job in hand",
-      "Ongoing",
-      "Budgetary",
-      "Bidding",
-    ],
-    statusOfRFQ: [
-      "Yet to quote",
-      "Req gathered",
-      "Follow up"
-    ]
-  };
-
   const [formData, setFormData] = useState({
     customerName: '',
     customerLocation: '',
@@ -68,35 +14,57 @@ function Add() {
     currency: '',
     application: '',
     brand: '',
+    expectedClosureMonth: '',
     natureOfRFQ: '',
     statusOfRFQ: '',
-    remarks: '', 
+    remarks: '',
   });
 
-  const [customOptions, setCustomOptions] = useState(initialOptions);
+  const [customOptions, setCustomOptions] = useState({
+    typeOfCustomer: [],
+    application: [],
+    sow: [],
+    brand: [],
+  });
+
   const [error, setError] = useState('');
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleAddCustomOption = async (name) => {
-    const customValue = prompt(`Add a new ${name}:`);
-    if (customValue && !customOptions[name].includes(customValue)) {
-      try {
+  const fetchOptions = async (name) => {
+    try {
+      const response = await fetch(`https://salescrm-backend.onrender.com/api/${name}`);
+      if (response.ok) {
+        const data = await response.json();
         setCustomOptions((prev) => ({
           ...prev,
-          [name]: [...prev[name], customValue],
+          [name]: data.map((item) => ({ id: item._id, name: item.name })),
         }));
+      }
+    } catch (err) {
+      console.error(`Failed to fetch ${name} options:`, err);
+    }
+  };
 
-        await fetch(`https://salescrm-backend.onrender.com/api/salesCRM/addCustomOption`, {
+  const handleAddCustomOption = async (name) => {
+    const customValue = prompt(`Add a new ${name}:`);
+    if (customValue) {
+      try {
+        const response = await fetch(`https://salescrm-backend.onrender.com/api/salesCRM/add-custom-input`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ category: name, value: customValue }),
+          body: JSON.stringify({ [name]: customValue }),
         });
-
+        if (response.ok) {
+          alert(`${name} added successfully!`);
+          fetchOptions(name); // Refresh the dropdown options
+        } else {
+          setError(`Failed to add new ${name}`);
+        }
       } catch (err) {
-        setError('Failed to add custom option. Please try again.');
+        setError(`An error occurred while adding ${name}`);
       }
     }
   };
@@ -104,37 +72,41 @@ function Add() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("https://salescrm-backend.onrender.com/api/salesCRM/add", {
+      const response = await fetch('https://salescrm-backend.onrender.com/api/salesCRM/add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-
       if (response.ok) {
-        alert('Entry added!');
+        alert('Entry added successfully!');
         setFormData({
           customerName: '',
-          enquiryMonth: '',
           customerLocation: '',
           customerPOC: '',
-          customerCategory: '',
+          rfqDate: '',
+          typeOfCustomer: '',
           projectName: '',
+          sow: '',
+          quotedValue: '',
+          currency: '',
           application: '',
-          location: '',
-          SOW: '',
           brand: '',
-          value: '',
-          expectedClosureMonth: '',
-          forecastStatus: '',
-          remarks: ''
+          expectedClosureMonth: '', // Reset expectedClosureMonth
+          natureOfRFQ: '',
+          statusOfRFQ: '',
+          remarks: '',
         });
       } else {
-        setError('Failed to add entry. Please check the data.');
+        setError('Failed to add the entry. Please check the inputs.');
       }
     } catch (err) {
       setError('An error occurred while submitting the form. Please try again.');
     }
   };
+
+  React.useEffect(() => {
+    ['typeOfCustomer', 'application', 'sow', 'brand'].forEach(fetchOptions);
+  }, []);
 
   return (
     <div className="add-container">
@@ -181,9 +153,9 @@ function Add() {
               required
             >
               <option value="">Select Type of Customer</option>
-              {customOptions.typeOfCustomer.map((option, idx) => (
-                <option key={idx} value={option}>
-                  {option}
+              {customOptions.typeOfCustomer.map((option) => (
+                <option key={option.id} value={option.id}>
+                  {option.name}
                 </option>
               ))}
             </select>
@@ -201,16 +173,11 @@ function Add() {
 
         <div className="form-row">
           <div className="select-container">
-            <select
-              name="sow"
-              onChange={handleChange}
-              value={formData.sow}
-              required
-            >
+            <select name="sow" onChange={handleChange} value={formData.sow} required>
               <option value="">Select SOW</option>
-              {customOptions.sow.map((option, idx) => (
-                <option key={idx} value={option}>
-                  {option}
+              {customOptions.sow.map((option) => (
+                <option key={option.id} value={option.id}>
+                  {option.name}
                 </option>
               ))}
             </select>
@@ -219,18 +186,14 @@ function Add() {
 
           <input
             name="quotedValue"
-            placeholder="Quoted Value"
             type="number"
+            placeholder="Quoted Value"
             onChange={handleChange}
             value={formData.quotedValue}
             required
           />
-          <select
-            name="currency"
-            onChange={handleChange}
-            value={formData.currency}
-            required
-          >
+          <select name="currency" onChange={handleChange} value={formData.currency} required>
+            <option value="">Select Currency</option>
             <option value="INR">INR</option>
             <option value="USD">USD</option>
             <option value="AED">AED</option>
@@ -240,41 +203,22 @@ function Add() {
 
         <div className="form-row">
           <div className="select-container">
-            <select
-              name="application"
-              onChange={handleChange}
-              value={formData.application}
-              required
-            >
+            <select name="application" onChange={handleChange} value={formData.application} required>
               <option value="">Select Application</option>
-              {customOptions.application.map((option, idx) => (
-                <option key={idx} value={option}>
-                  {option}
+              {customOptions.application.map((option) => (
+                <option key={option.id} value={option.id}>
+                  {option.name}
                 </option>
               ))}
             </select>
             <button type="button" onClick={() => handleAddCustomOption('application')}>+ Add</button>
           </div>
-          <input
-            type="date"
-            name="expectedClosureMonth"
-            onChange={handleChange}
-            value={formData.expectedClosureMonth}
-            placeholder='Expected Closure Date'
-            required
-          />
-
           <div className="select-container">
-            <select
-              name="brand"
-              onChange={handleChange}
-              value={formData.brand}
-              required
-            >
+            <select name="brand" onChange={handleChange} value={formData.brand} required>
               <option value="">Select Brand</option>
-              {customOptions.brand.map((option, idx) => (
-                <option key={idx} value={option}>
-                  {option}
+              {customOptions.brand.map((option) => (
+                <option key={option.id} value={option.id}>
+                  {option.name}
                 </option>
               ))}
             </select>
@@ -283,44 +227,23 @@ function Add() {
         </div>
 
         <div className="form-row">
-          <select
-            name="natureOfRFQ"
+          <input
+            type="month"
+            name="expectedClosureMonth"
+            placeholder="Expected Closure Date"
             onChange={handleChange}
-            value={formData.natureOfRFQ}
+            value={formData.expectedClosureMonth}
             required
-          >
-            <option value="">Nature of RFQ</option>
-            {customOptions.natureOfRFQ.map((option, idx) => (
-              <option key={idx} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
-
-          <select
-            name="statusOfRFQ"
-            onChange={handleChange}
-            value={formData.statusOfRFQ}
-            required
-          >
-            <option value="">Status of RFQ</option>
-            {customOptions.statusOfRFQ.map((option, idx) => (
-              <option key={idx} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
+          />
         </div>
 
-        <textarea
-          name="remarks"
-          placeholder="Remarks"
-          onChange={handleChange}
-          rows="4"
-          value={formData.remarks}
-        />
-
         <div className="form-row">
+          <textarea
+            name="remarks"
+            placeholder="Remarks"
+            onChange={handleChange}
+            value={formData.remarks}
+          />
           <button type="submit">Add Entry</button>
         </div>
       </form>

@@ -3,7 +3,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./SalesReport.css";
 import { jsPDF } from "jspdf";
-
 const SalesReport = ({ onReportGenerated }) => {
   const [reportType, setReportType] = useState("yearly");
   const [year, setYear] = useState(new Date().getFullYear());
@@ -17,11 +16,9 @@ const SalesReport = ({ onReportGenerated }) => {
     sows: [],
     brands: [],
   });
-
   const years = [2022, 2023, 2024, 2025];
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const quarters = [1, 2, 3, 4];
-
   useEffect(() => {
     const fetchDropdownData = async () => {
       try {
@@ -43,7 +40,6 @@ const SalesReport = ({ onReportGenerated }) => {
     };
     fetchDropdownData();
   }, []);
-
   const handleGenerateReport = async () => {
     const params = {
       reportType,
@@ -53,14 +49,12 @@ const SalesReport = ({ onReportGenerated }) => {
       customStartDate,
       customEndDate,
     };
-
     try {
       const response = await fetch("https://salescrm-backend.onrender.com/api/salesCRM/report", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(params),
       });
-
       const data = await response.json();
       if (data.success) {
         generatePDF(data.report);
@@ -72,32 +66,24 @@ const SalesReport = ({ onReportGenerated }) => {
       toast.error("Error generating report.");
     }
   };
-
   const generatePDF = (reportData) => {
     const doc = new jsPDF();
     doc.setFontSize(20);
     doc.text("Sales CRM Report", 14, 20);
     doc.setFontSize(12);
-
     let y = 40;
     reportData.forEach((entry, index) => {
       doc.text(`${index + 1}. ${entry.customerName} - ${entry.projectName} - ${entry.statusOfRFQ}`, 14, y);
       y += 10;
     });
-
     const pdfName = `sales_report_${new Date().toISOString()}.pdf`;
     doc.save(pdfName);
-
-    // Save report data (e.g., in a list for the ReportsSection)
     onReportGenerated({ reportType, date: new Date(), pdfName });
   };
-
   return (
     <div className="report-container">
       <ToastContainer />
       <h2>Generate Sales Report</h2>
-
-      {/* Report Type and Date Selection */}
       <div>
         <label>Report Type: </label>
         <select onChange={(e) => setReportType(e.target.value)} value={reportType}>
@@ -107,7 +93,6 @@ const SalesReport = ({ onReportGenerated }) => {
           <option value="custom">Custom</option>
         </select>
       </div>
-
       {reportType === "yearly" && (
         <div>
           <label>Year: </label>
@@ -120,8 +105,6 @@ const SalesReport = ({ onReportGenerated }) => {
           </select>
         </div>
       )}
-
-
       {reportType === "half-year" && (
         <div>
           <label>Year: </label>
@@ -139,7 +122,6 @@ const SalesReport = ({ onReportGenerated }) => {
           </select>
         </div>
       )}
-
       {reportType === "quarterly" && (
         <div>
           <label>Year: </label>
@@ -160,7 +142,6 @@ const SalesReport = ({ onReportGenerated }) => {
           </select>
         </div>
       )}
-
       {reportType === "custom" && (
         <div>
           <label>Start Date: </label>
@@ -169,10 +150,8 @@ const SalesReport = ({ onReportGenerated }) => {
           <input type="date" onChange={(e) => setCustomEndDate(e.target.value)} value={customEndDate} />
         </div>
       )}
-
       <button onClick={handleGenerateReport}>Generate Report</button>
     </div>
   );
 };
-
 export default SalesReport;
