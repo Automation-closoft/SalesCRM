@@ -258,6 +258,38 @@ function Add() {
           />
         </div>
         <div className="form-row">
+          <label htmlFor="natureOfRFQ">Nature of RFQ</label>
+          <select
+            name="natureOfRFQ"
+            value={formData.natureOfRFQ}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Nature of RFQ</option>
+            <option value="Job in hand">Job in hand</option>
+            <option value="Ongoing">Ongoing</option>
+            <option value="Budgetary">Budgetary</option>
+            <option value="Bidding">Bidding</option>
+          </select>
+        </div>
+        <div className="form-row">
+          <label htmlFor="statusOfRFQ">Status of RFQ</label>
+          <select
+            name="statusOfRFQ"
+            value={formData.statusOfRFQ}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Status of RFQ</option>
+            <option value="Requirement Gathering">Requirement Gathering</option>
+            <option value="Yet to Quote">Yet to Quote</option>
+            <option value="Quote Sent">Quote Sent</option>
+            <option value="PO Follow-up">PO Follow-up</option>
+            <option value="Converted">Converted</option>
+            <option value="Lost">Lost</option>
+          </select>
+        </div>
+        <div className="form-row">
           <textarea
             name="remarks"
             placeholder="Remarks"

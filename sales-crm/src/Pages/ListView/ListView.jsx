@@ -78,6 +78,7 @@ const ListView = () => {
             <th>Enquiry Month</th>
             <th>Customer Name</th>
             <th>Customer Category</th>
+            <th>Customer Point Of Contact</th>
             <th>Project Name</th>
             <th>Application</th>
             <th>Location</th>

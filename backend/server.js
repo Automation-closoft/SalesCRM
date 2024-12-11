@@ -2,7 +2,6 @@ import express from "express"
 import cors from "cors"
 import {connectDB} from "./config/db.js";
 import dotenv from 'dotenv';
-import { populateDefaults } from "./controllers/populateDefaults.js";
 import salesRoutes from "./routes/salesRoutes.js";
 import optionsRoutes from './routes/options.js';
 

@@ -1,38 +1,5 @@
 import { TypeOfCustomer, Application, SOW, Brand, SalesCrm } from "../models/crmModel.js";
 import mongoose from 'mongoose';
-const populateDefaults = async () => {
-  try {
-    await TypeOfCustomer.insertMany([
-      { name: "Machine Builders" }, { name: "OEM/MFG" }, { name: "PID" },
-      { name: "TSC" }, { name: "PnC" }, { name: "PSI" }, { name: "PSU" },
-      { name: "EPC/MEP" }
-    ]);
-
-    await Application.insertMany([
-      { name: "SG/DG Sych" }, { name: "Testing Bench/EOL/SPM" },
-      { name: "Water & WW Treatment" }, { name: "Energy Management" },
-      { name: "HVAC/BMS/CPM" }, { name: "Discrete Manufacturing" },
-      { name: "Metering Skids" }
-    ]);
-
-    await SOW.insertMany([
-      { name: "Backend Development & Testing" }, { name: "EMS (Shop Floor)" },
-      { name: "EMS (Site)" }, { name: "Engineering Design" },
-      { name: "Consultant Documentation" }, { name: "Project (E2E)" },
-      { name: "Trading" }, { name: "OD & STC" }
-    ]);
-
-    await Brand.insertMany([
-      { name: "Siemens" }, { name: "Schneider" }, { name: "Rockwell" },
-      { name: "Mitsubishi" }, { name: "Delta" }, { name: "Omron" },
-      { name: "GE" }, { name: "ABB" }, { name: "Others" }
-    ]);
-
-    console.log("Dropdowns populated successfully!");
-  } catch (error) {
-    console.error("Error populating dropdowns:", error);
-  }
-};
 const addClient = async (req, res) => {
   try {
     if (!req.body.customerName || !req.body.rfqDate || !req.body.projectName) {
@@ -210,7 +177,6 @@ const reportGen =async (req,res) => {
   };
 
 export {
-  populateDefaults,
   addClient,
   getAllClients,
   deleteClient,
