@@ -41,6 +41,7 @@ const addClient = async (req, res) => {
     const client = new SalesCrm({
       customerName: req.body.customerName,
       customerLocation : req.body.customerLocation,
+      customerPOC : req.body.customerPOC,
       rfqDate: req.body.rfqDate,
       typeOfCustomer: req.body.typeOfCustomer,
       projectName: req.body.projectName,

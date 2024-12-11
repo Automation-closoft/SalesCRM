@@ -9,11 +9,11 @@ function Add() {
     rfqDate: '',
     typeOfCustomer: '',
     projectName: '',
-    sow: '',
+    sows: '',
     quotedValue: '',
     currency: '',
     application: '',
-    brand: '',
+    brands: '',
     expectedClosureMonth: '',
     natureOfRFQ: '',
     statusOfRFQ: '',
@@ -22,9 +22,9 @@ function Add() {
 
   const [customOptions, setCustomOptions] = useState({
     typeOfCustomer: [],
-    application: [],
-    sow: [],
-    brand: [],
+    sows: [],
+    applications: [],
+    brands: [],
   });
 
   const [error, setError] = useState('');
@@ -35,37 +35,34 @@ function Add() {
 
   const fetchDropdowns = async () => {
     try {
-      const response = await fetch(`https://salescrm-backend.onrender.com/api/dropdowns`);
+      const response = await fetch('https://salescrm-backend.onrender.com/api/salesCRM/dropdowns');
       if (response.ok) {
         const data = await response.json();
-  
-        // Set options for each dropdown
         setCustomOptions({
-          typeOfCustomers: data.typeOfCustomers.map((item) => ({
+          typeOfCustomer: data.typeOfCustomers?.map((item) => ({
             id: item._id,
             name: item.name,
-          })),
-          applications: data.applications.map((item) => ({
+          })) || [],
+          sows: data.sows?.map((item) => ({
             id: item._id,
             name: item.name,
-          })),
-          sows: data.sows.map((item) => ({
+          })) || [],
+          applications: data.applications?.map((item) => ({
             id: item._id,
             name: item.name,
-          })),
-          brands: data.brands.map((item) => ({
+          })) || [],
+          brands: data.brands?.map((item) => ({
             id: item._id,
             name: item.name,
-          })),
+          })) || [],
         });
       } else {
-        console.error("Failed to fetch dropdown data:", response.statusText);
+        console.error('Failed to fetch dropdown data:', response.statusText);
       }
     } catch (err) {
-      console.error("Failed to fetch dropdown data:", err);
+      console.error('Error fetching dropdown data:', err);
     }
   };
-  
 
   const handleAddCustomOption = async (name) => {
     const customValue = prompt(`Add a new ${name}:`);
@@ -105,12 +102,12 @@ function Add() {
           rfqDate: '',
           typeOfCustomer: '',
           projectName: '',
-          sow: '',
+          sows: '',
           quotedValue: '',
           currency: '',
-          application: '',
-          brand: '',
-          expectedClosureMonth: '', 
+          applications: '',
+          brands: '',
+          expectedClosureMonth: '',
           natureOfRFQ: '',
           statusOfRFQ: '',
           remarks: '',
@@ -122,11 +119,9 @@ function Add() {
       setError('An error occurred while submitting the form. Please try again.');
     }
   };
-
   React.useEffect(() => {
     fetchDropdowns();
   }, []);
-
   return (
     <div className="add-container">
       <h2>Sales CRM Dashboard</h2>
@@ -162,7 +157,6 @@ function Add() {
             required
           />
         </div>
-
         <div className="form-row">
           <div className="select-container">
             <select
@@ -180,7 +174,6 @@ function Add() {
             </select>
             <button type="button" onClick={() => handleAddCustomOption('typeOfCustomer')}>+ Add</button>
           </div>
-
           <input
             name="projectName"
             placeholder="Project Name"
@@ -189,20 +182,18 @@ function Add() {
             required
           />
         </div>
-
         <div className="form-row">
           <div className="select-container">
-            <select name="sow" onChange={handleChange} value={formData.sow} required>
-              <option value="">Select SOW</option>
-              {customOptions.sow.map((option) => (
+            <select name="sows" onChange={handleChange} value={formData.sows} required>
+              <option value="">Select SOWs</option>
+              {customOptions.sows.map((option) => (
                 <option key={option.id} value={option.id}>
                   {option.name}
                 </option>
               ))}
             </select>
-            <button type="button" onClick={() => handleAddCustomOption('sow')}>+ Add</button>
+            <button type="button" onClick={() => handleAddCustomOption('sows')}>+ Add</button>
           </div>
-
           <input
             name="quotedValue"
             type="number"
@@ -214,37 +205,48 @@ function Add() {
           <select name="currency" onChange={handleChange} value={formData.currency} required>
             <option value="">Select Currency</option>
             <option value="INR">INR</option>
-            <option value="USD">USD</option>
             <option value="AED">AED</option>
+            <option value="USD">USD</option>
+            <option value="QAR">QAR</option>
             <option value="SAR">SAR</option>
+            <option value="OMR">OMR</option>
+            <option value="KWD">KWD</option>
+            <option value="NGN">NGN</option>
+            <option value="ZAR">ZAR</option>
+            <option value="MGA">MGA</option>
+            <option value="BHD">BHD</option>
+            <option value="IRR">IRR</option>
+            <option value="IQD">IQD</option>
+            <option value="JOD">JOD</option>
+            <option value="LBP">LBP</option>
+            <option value="TRY">TRY</option>
+            <option value="YER">YER</option>
           </select>
         </div>
-
         <div className="form-row">
           <div className="select-container">
-            <select name="application" onChange={handleChange} value={formData.application} required>
+            <select name="applications" onChange={handleChange} value={formData.applications} required>
               <option value="">Select Application</option>
-              {customOptions.application.map((option) => (
+              {customOptions.applications.map((option) => (
                 <option key={option.id} value={option.id}>
                   {option.name}
                 </option>
               ))}
             </select>
-            <button type="button" onClick={() => handleAddCustomOption('application')}>+ Add</button>
+            <button type="button" onClick={() => handleAddCustomOption('applications')}>+ Add</button>
           </div>
           <div className="select-container">
-            <select name="brand" onChange={handleChange} value={formData.brand} required>
+            <select name="brands" onChange={handleChange} value={formData.brands} required>
               <option value="">Select Brand</option>
-              {customOptions.brand.map((option) => (
+              {customOptions.brands.map((option) => (
                 <option key={option.id} value={option.id}>
                   {option.name}
                 </option>
               ))}
             </select>
-            <button type="button" onClick={() => handleAddCustomOption('brand')}>+ Add</button>
+            <button type="button" onClick={() => handleAddCustomOption('brands')}>+ Add</button>
           </div>
         </div>
-
         <div className="form-row">
           <input
             type="month"
@@ -255,7 +257,6 @@ function Add() {
             required
           />
         </div>
-
         <div className="form-row">
           <textarea
             name="remarks"
@@ -269,5 +270,4 @@ function Add() {
     </div>
   );
 }
-
 export default Add;

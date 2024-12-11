@@ -22,7 +22,7 @@ const salesCrmSchema = new mongoose.Schema({
   },
   application: { type: mongoose.Schema.Types.ObjectId, ref: "Application", required: true },
   brand: { type: mongoose.Schema.Types.ObjectId, ref: "Brand", required: true },
-  expectedClosureMonth: { type: Date, required: true },
+  expectedClosureMonth: { type: String, required: true },
   natureOfRFQ: {
     type: String,
     enum: ["Job in hand", "Ongoing", "Budgetary", "Bidding"],
