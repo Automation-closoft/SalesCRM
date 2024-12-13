@@ -73,22 +73,23 @@ function Add() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ [name]: customValue }),
         });
+        const responseBody = await response.json(); // Get the response body for better insight
         if (response.ok) {
           alert(`${name} added successfully!`);
           fetchOptions(name);
         } else {
-          setError(`Failed to add new ${name}`);
+          setError(`Failed to add new ${name}: ${responseBody.message || responseBody.error}`);
         }
       } catch (err) {
-        setError(`An error occurred while adding ${name}`);
+        setError(`An error occurred while adding ${name}: ${err.message}`);
       }
     }
-  };
+  };  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('https://salescrm-backend.onrender.com/api/salesCRM/add', {
+      const response = await fetch('https://salescrm-backend.onrender.com/api/salesCRM/add',{
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

@@ -132,24 +132,35 @@ const getDropdownData = async (req, res) => {
   }
 };
 
-const reportGen =async (req,res) => {
+const reportGen = async (req, res) => {
   try {
     const { reportType, year, month, quarter, customStartDate, customEndDate } = req.body;
     let query = {};
-    if (reportType === 'yearly') {
+    if (reportType === 'custom') {
+      if (!customStartDate || !customEndDate) {
+        return res.status(400).json({ success: false, message: 'Custom start and end dates are required.' });
+      }
+      if (new Date(customStartDate) > new Date(customEndDate)) {
+        return res.status(400).json({ success: false, message: 'Start date cannot be after end date.' });
+      }
+      query = { rfqDate: { $gte: customStartDate, $lte: customEndDate } };
+    }
+    else if (reportType === 'yearly') {
       query = { rfqDate: { $gte: `${year}-01-01`, $lte: `${year}-12-31` } };
-    } else if (reportType === 'quarterly') {
+    }
+    else if (reportType === 'quarterly') {
       const startMonth = (quarter - 1) * 3 + 1;
       const endMonth = startMonth + 2;
       query = { rfqDate: { $gte: `${year}-${startMonth}-01`, $lte: `${year}-${endMonth}-31` } };
-    } else if (reportType === 'custom') {
-      query = { rfqDate: { $gte: customStartDate, $lte: customEndDate } };
     }
     const report = await SalesCrm.find(query);
     res.status(200).json({ success: true, report });
   } catch (error) {
+    console.error('Error generating report:', error);
     res.status(500).json({ success: false, message: 'Failed to generate report.' });
-  }};
+  }
+};
+
 
   const addCustomInput = async (req, res) => {
     try {

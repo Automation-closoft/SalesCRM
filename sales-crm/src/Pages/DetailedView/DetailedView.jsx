@@ -18,25 +18,35 @@ const DetailedView = () => {
   useEffect(() => {
     const fetchDropdowns = async () => {
       try {
-        const [typeRes, appRes, sowRes, brandRes] = await Promise.all([
-          fetch("https://salescrm-backend.onrender.com/api/typeOfCustomer"),
-          fetch("https://salescrm-backend.onrender.com/api/application"),
-          fetch("https://salescrm-backend.onrender.com/api/sow"),
-          fetch("https://salescrm-backend.onrender.com/api/brand"),
-        ]);
-        const typeData = await typeRes.json();
-        const appData = await appRes.json();
-        const sowData = await sowRes.json();
-        const brandData = await brandRes.json();
+        const response = await fetch(
+          "https://salescrm-backend.onrender.com/api/salesCRM/dropdowns"
+        );
+        if (response.ok) {
+          const data = await response.json();
 
-        setDropdownOptions({
-          typeOfCustomer: typeData,
-          application: appData,
-          sow: sowData,
-          brand: brandData,
-        });
-      } catch (error) {
-        toast.error("Failed to fetch dropdown options.");
+          setDropdownOptions({
+            typeOfCustomer: data.typeOfCustomers?.map((item) => ({
+              id: item._id,
+              name: item.name,
+            })) || [],
+            application: data.applications?.map((item) => ({
+              id: item._id,
+              name: item.name,
+            })) || [],
+            sow: data.sows?.map((item) => ({
+              id: item._id,
+              name: item.name,
+            })) || [],
+            brand: data.brands?.map((item) => ({
+              id: item._id,
+              name: item.name,
+            })) || [],
+          });
+        } else {
+          console.error("Failed to fetch dropdown data:", response.statusText);
+        }
+      } catch (err) {
+        console.error("Error fetching dropdown data:", err);
       }
     };
 
@@ -105,7 +115,7 @@ const DetailedView = () => {
       toast.error("Error adding remark.");
     }
   };
-  
+
   if (!client) {
     return <p>Loading client details...</p>;
   }
@@ -130,7 +140,7 @@ const DetailedView = () => {
           onChange={handleInputChange}
         >
           {dropdownOptions.typeOfCustomer.map((type) => (
-            <option key={type._id} value={type.name}>
+            <option key={type.id} value={type.name}>
               {type.name}
             </option>
           ))}
@@ -151,7 +161,7 @@ const DetailedView = () => {
           onChange={handleInputChange}
         >
           {dropdownOptions.application.map((app) => (
-            <option key={app._id} value={app.name}>
+            <option key={app.id} value={app.name}>
               {app.name}
             </option>
           ))}
@@ -168,16 +178,16 @@ const DetailedView = () => {
         <label>SOW:</label>
         <select name="sow" value={client.sow} onChange={handleInputChange}>
           {dropdownOptions.sow.map((sow) => (
-            <option key={sow._id} value={sow.name}>
+            <option key={sow.id} value={sow.name}>
               {sow.name}
             </option>
           ))}
         </select>
 
         <label>Brand:</label>
-        <select name="brand" value={client.brand} onChange={handleInputChange}>
+        <select name="brands" value={client.brands} onChange={handleInputChange}>
           {dropdownOptions.brand.map((brand) => (
-            <option key={brand._id} value={brand.name}>
+            <option key={brand.id} value={brand.name}>
               {brand.name}
             </option>
           ))}
@@ -197,29 +207,13 @@ const DetailedView = () => {
           value={client.currency}
           onChange={handleInputChange}
         >
-          {[
-            "INR",
-            "AED",
-            "USD",
-            "QAR",
-            "SAR",
-            "OMR",
-            "KWD",
-            "NGN",
-            "ZAR",
-            "MGA",
-            "BHD",
-            "IRR",
-            "IQD",
-            "JOD",
-            "LBP",
-            "TRY",
-            "YER",
-          ].map((currency) => (
-            <option key={currency} value={currency}>
-              {currency}
-            </option>
-          ))}
+          {["INR", "AED", "USD", "QAR", "SAR", "OMR", "KWD", "NGN", "ZAR", "MGA", "BHD", "IRR", "IQD", "JOD", "LBP", "TRY", "YER"].map(
+            (currency) => (
+              <option key={currency} value={currency}>
+                {currency}
+              </option>
+            )
+          )}
         </select>
 
         <label>Nature of RFQ:</label>
@@ -241,7 +235,7 @@ const DetailedView = () => {
           value={client.statusOfRFQ}
           onChange={handleInputChange}
         >
-          {["Yet to quote", "Req gathered", "Follow up"].map((status) => (
+          {["Requirement gathering","Yet to Quote", "Quote Sent", "PO Follow-up","Converted","Lost"].map((status) => (
             <option key={status} value={status}>
               {status}
             </option>

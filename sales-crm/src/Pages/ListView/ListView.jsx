@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 const ListView = () => {
   const [clients, setClients] = useState([]);
-  const [statuses] = useState(["Yet to quote", "Req gathered", "Follow up"]);
+  const [statuses] = useState(["Requirement gathering","Yet to Quote", "Quote Sent", "PO Follow-up","Converted","Lost"]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -123,7 +123,7 @@ const ListView = () => {
       <td>
         <select
           value={client.statusOfRFQ}
-          onClick={(e) => e.stopPropagation()} // Prevent triggering the row click
+          onClick={(e) => e.stopPropagation()} 
           onChange={(e) => handleStatusChange(client._id, e.target.value)}
         >
           {statuses.map((status) => (

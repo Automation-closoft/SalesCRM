@@ -1,88 +1,126 @@
+/* =========================
+   Detailed View Styling
+========================= */
+
+/* Container Styling */
 .detailed-container {
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    max-width: 800px;
-    margin: 0 auto;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  h2 {
-    text-align: center;
-    color: #333;
-  }
-  
-  .detail-form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  
-  .detail-form label {
-    flex: 1 1 100%;
-    font-weight: bold;
-  }
-  
-  .detail-form input {
-    flex: 1 1 calc(50% - 10px);
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-  
-  .save-button {
-    margin-top: 15px;
-    padding: 10px 20px;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .save-button:hover {
-    background-color: #45a049;
-  }
-  
-  .remarks-section {
-    margin-top: 30px;
-  }
-  
-  .remarks-section h3 {
-    color: #333;
-  }
-  
-  .remarks-section ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .remarks-section li {
-    background-color: #e8e8e8;
-    padding: 8px;
-    margin-bottom: 5px;
-    border-radius: 4px;
-  }
-  
-  .remarks-section textarea {
-    width: 100%;
-    padding: 8px;
-    margin-top: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-  
-  .add-remark-button {
-    margin-top: 10px;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .add-remark-button:hover {
-    background-color: #0056b3;
-  }
-  
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  max-width: 800px;
+  margin: 0 auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading */
+h2 {
+  text-align: center;
+  color: #333;
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+
+/* Form Styling */
+.detail-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: center;
+}
+
+.detail-form label {
+  flex: 1 1 100%;
+  font-weight: bold;
+  color: #555;
+  font-size: 1rem;
+}
+
+.detail-form input,
+.detail-form select {
+  flex: 1 1 calc(50% - 10px);
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+/* Combine Categories with Dropdowns */
+.detail-form .combined-input {
+  flex: 1 1 calc(50% - 10px);
+  display: flex;
+  gap: 10px;
+}
+
+.detail-form .combined-input select {
+  flex: 1;
+}
+
+/* Save Button */
+.save-button {
+  margin-top: 20px;
+  padding: 12px 25px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.save-button:hover {
+  background-color: #45a049;
+}
+
+/* Remarks Section */
+.remarks-section {
+  margin-top: 30px;
+}
+
+.remarks-section h3 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.remarks-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.remarks-section li {
+  background-color: #e8e8e8;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.remarks-section textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  resize: vertical;
+}
+
+/* Add Remark Button */
+.add-remark-button {
+  margin-top: 15px;
+  padding: 12px 25px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-remark-button:hover {
+  background-color: #0056b3;
+}

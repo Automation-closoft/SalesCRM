@@ -12,15 +12,21 @@ const ReportsSection = () => {
     <div>
       <h2>Sales CRM Reports</h2>
       <SalesReport onReportGenerated={handleReportGenerated} />
-      
+
       {reports.length > 0 && (
         <div>
           <h3>Generated Reports:</h3>
           <ul>
             {reports.map((report, index) => (
               <li key={index}>
-                <span>{`${report.reportType} Report - ${new Date(report.date).toLocaleString()}`}</span>
-                <a href={`/${report.pdfName}`} download>
+                <span>
+                  {`${report.reportType} Report - ${new Date(report.date).toLocaleString()}`}
+                </span>
+                <a
+                  href={`/${report.pdfName}`}
+                  download
+                  style={{ marginLeft: "10px", textDecoration: "none", color: "#007bff" }}
+                >
                   Download PDF
                 </a>
               </li>
