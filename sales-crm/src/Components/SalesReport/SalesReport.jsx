@@ -13,53 +13,14 @@ const SalesReport = ({ onReportGenerated }) => {
   const [halfYear, setHalfYear] = useState(1);
   const [customStartDate, setCustomStartDate] = useState("");
   const [customEndDate, setCustomEndDate] = useState("");
-  const [dropdownData, setDropdownData] = useState({
-    typeOfCustomers: [],
-    applications: [],
-    sows: [],
-    brands: [],
-  });
+  const [reportData, setReportData] = useState(null); // Store report data for display
 
   const years = [2022, 2023, 2024, 2025];
-  const months = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-  ];
   const quarters = [1, 2, 3, 4];
-
-  useEffect(() => {
-    const fetchDropdownData = async () => {
-      try {
-        const response = await fetch(
-          "https://salescrm-backend.onrender.com/api/salesCRM/dropdowns"
-        );
-        const data = await response.json();
-        if (data.success) {
-          setDropdownData({
-            typeOfCustomers: data.typeOfCustomers,
-            applications: data.applications,
-            sows: data.sows,
-            brands: data.brands,
-          });
-        } else {
-          toast.error("Failed to fetch dropdown data.");
-        }
-      } catch (error) {
-        toast.error("Error fetching dropdown data.");
-      }
-    };
-
-    fetchDropdownData();
-  }, []);
 
   const handleGenerateReport = async () => {
     if (reportType === "custom" && (!customStartDate || !customEndDate)) {
       toast.error("Please select both start and end dates.");
-      return;
-    }
-
-    if (reportType !== "custom" && !year) {
-      toast.error("Please select a year.");
       return;
     }
 
@@ -86,47 +47,32 @@ const SalesReport = ({ onReportGenerated }) => {
       if (!response.ok) {
         const errorMessage = await response.text();
         toast.error(`API Error: ${errorMessage}`);
-        console.error("API Error:", errorMessage);
         return;
       }
 
       const data = await response.json();
-      console.log("API Response Data:", data);
-
       if (data.success && data.report.length > 0) {
-        generatePDF(data.report);
+        setReportData(data.report); // Set report data for display
         toast.success("Report generated successfully!");
       } else {
         toast.error(data.message || "No data available for the selected criteria.");
-        console.error("Error response or empty data:", data);
       }
     } catch (error) {
       toast.error("Error generating report.");
-      console.error("Fetch error:", error);
     }
   };
 
-  const generatePDF = (reportData) => {
+  const downloadPDF = () => {
+    if (!reportData) return;
+
     const doc = new jsPDF();
     doc.setFontSize(20);
     doc.text("Sales CRM Report", 14, 20);
     doc.setFontSize(12);
     let y = 40;
 
-    if (reportData.length === 0) {
-      doc.text("No data available for the selected criteria.", 14, y);
-      doc.save(`sales_report_${new Date().toISOString()}.pdf`);
-      return;
-    }
-
     // Executive Summary
     doc.text("1. Executive Summary", 14, y);
-    y += 10;
-    doc.text(
-      `Report Period: ${customStartDate || "MM/DD/YYYY"} - ${customEndDate || "MM/DD/YYYY"}`,
-      14,
-      y
-    );
     y += 10;
 
     const totalRFQs = reportData.length;
@@ -150,24 +96,8 @@ const SalesReport = ({ onReportGenerated }) => {
     doc.text(`Lost RFQs: ${totalLostRFQs}`, 14, y);
     y += 20;
 
-    // Key Metrics Overview
-    doc.text("2. Key Metrics Overview", 14, y);
-    y += 10;
-
-    doc.autoTable({
-      head: [["Metric", "Value"]],
-      body: [
-        ["Total Customers Engaged", reportData.length],
-        ["Total Projects", new Set(reportData.map((entry) => entry.projectName)).size],
-        ["Average Quoted Value", `₹${(totalQuotedValue / totalRFQs).toFixed(2)}`],
-        ["RFQs by Status", ""],
-      ],
-      startY: y,
-    });
-    y += 30;
-
     // RFQ Details
-    doc.text("3. RFQ Details", 14, y);
+    doc.text("2. RFQ Details", 14, y);
     y += 10;
 
     doc.autoTable({
@@ -196,7 +126,6 @@ const SalesReport = ({ onReportGenerated }) => {
 
     const pdfName = `sales_report_${new Date().toISOString()}.pdf`;
     doc.save(pdfName);
-    onReportGenerated();
   };
 
   return (
@@ -224,9 +153,9 @@ const SalesReport = ({ onReportGenerated }) => {
             value={year}
             onChange={(e) => setYear(e.target.value)}
           >
-            {years.map((year) => (
-              <option key={year} value={year}>
-                {year}
+            {years.map((y) => (
+              <option key={y} value={y}>
+                {y}
               </option>
             ))}
           </select>
@@ -252,42 +181,69 @@ const SalesReport = ({ onReportGenerated }) => {
 
       {reportType === "half-yearly" && (
         <div className="form-group">
-          <label htmlFor="half-year">Select Half-Year</label>
-          <select
-            id="half-year"
-            value={halfYear}
-            onChange={(e) => setHalfYear(e.target.value)}
-          >
-            <option value="1">First Half (Jan - Jun)</option>
-            <option value="2">Second Half (Jul - Dec)</option>
+          <label htmlFor="halfYear">Select Half-Year</label>
+          <select id="halfYear" value={halfYear} onChange={(e) => setHalfYear(e.target.value)}>
+            <option value={1}>Jan - Jun</option>
+            <option value={2}>Jul - Dec</option>
           </select>
         </div>
       )}
 
       {reportType === "custom" && (
-        <>
-          <div className="form-group">
-            <label htmlFor="customStartDate">Start Date</label>
-            <input
-              type="date"
-              id="customStartDate"
-              value={customStartDate}
-              onChange={(e) => setCustomStartDate(e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="customEndDate">End Date</label>
-            <input
-              type="date"
-              id="customEndDate"
-              value={customEndDate}
-              onChange={(e) => setCustomEndDate(e.target.value)}
-            />
-          </div>
-        </>
+        <div>
+          <label htmlFor="customStartDate">Start Date</label>
+          <input
+            type="date"
+            id="customStartDate"
+            value={customStartDate}
+            onChange={(e) => setCustomStartDate(e.target.value)}
+          />
+
+          <label htmlFor="customEndDate">End Date</label>
+          <input
+            type="date"
+            id="customEndDate"
+            value={customEndDate}
+            onChange={(e) => setCustomEndDate(e.target.value)}
+          />
+        </div>
       )}
 
       <button onClick={handleGenerateReport}>Generate Report</button>
+
+      {reportData && (
+        <div className="report-display">
+          <h2>Generated Report</h2>
+          <table className="report-table">
+            <thead>
+              <tr>
+                <th>Customer Name</th>
+                <th>Project Name</th>
+                <th>RFQ Date</th>
+                <th>Type of Customer</th>
+                <th>SOW</th>
+                <th>Quoted Value</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {reportData.map((entry, index) => (
+                <tr key={index}>
+                  <td>{entry.customerName}</td>
+                  <td>{entry.projectName}</td>
+                  <td>{entry.rfqDate}</td>
+                  <td>{entry.typeOfCustomer}</td>
+                  <td>{entry.sow}</td>
+                  <td>₹{entry.quotedValue}</td>
+                  <td>{entry.statusOfRFQ}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <button onClick={downloadPDF}>Download Report</button>
+        </div>
+      )}
+
       <ToastContainer />
     </div>
   );

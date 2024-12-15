@@ -29,15 +29,15 @@ const DetailedView = () => {
               id: item._id,
               name: item.name,
             })) || [],
-            application: data.applications?.map((item) => ({
+            application: data.application?.map((item) => ({
               id: item._id,
               name: item.name,
             })) || [],
-            sow: data.sows?.map((item) => ({
+            sow: data.sow?.map((item) => ({
               id: item._id,
               name: item.name,
             })) || [],
-            brand: data.brands?.map((item) => ({
+            brand: data.brand?.map((item) => ({
               id: item._id,
               name: item.name,
             })) || [],
@@ -177,7 +177,7 @@ const DetailedView = () => {
 
         <label>SOW:</label>
         <select name="sow" value={client.sow} onChange={handleInputChange}>
-          {dropdownOptions.sow.map((sow) => (
+          {dropdownOptions.sow?.map((sow) => (
             <option key={sow.id} value={sow.name}>
               {sow.name}
             </option>
@@ -185,7 +185,7 @@ const DetailedView = () => {
         </select>
 
         <label>Brand:</label>
-        <select name="brands" value={client.brands} onChange={handleInputChange}>
+        <select name="brand" value={client.brand} onChange={handleInputChange}>
           {dropdownOptions.brand.map((brand) => (
             <option key={brand.id} value={brand.name}>
               {brand.name}
