@@ -20,8 +20,8 @@ const salesCrmSchema = new mongoose.Schema({
     enum: ["INR", "AED", "USD", "QAR", "SAR", "OMR", "KWD", "NGN", "ZAR", "MGA", "BHD", "IRR", "IQD", "JOD", "LBP", "TRY", "YER"],
     required: true,
   },
-  application: { type: mongoose.Schema.Types.ObjectId, ref: "Application", required: true },
-  brand: { type: mongoose.Schema.Types.ObjectId, ref: "Brand", required: true },
+  applications: { type: mongoose.Schema.Types.ObjectId, ref: "Application", required: true },
+  brands: { type: mongoose.Schema.Types.ObjectId, ref: "Brand", required: true },
   expectedClosureMonth: { type: String, required: true },
   natureOfRFQ: {
     type: String,
