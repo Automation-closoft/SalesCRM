@@ -76,7 +76,7 @@ function Add() {
         const responseBody = await response.json();
         if (response.ok) {
           alert(`${name} added successfully!`);
-          fetchDropdowns(name);
+          fetchDropdowns();
         } else {
           setError(`Failed to add new ${name}: ${responseBody.message || responseBody.error}`);
         }
@@ -185,9 +185,9 @@ function Add() {
         </div>
         <div className="form-row">
           <div className="select-container">
-            <select name="sows" onChange={handleChange} value={formData.sows} required>
+            <select name="sow" onChange={handleChange} value={formData.sow} required>
               <option value="">Select SOW</option>
-              {customOptions.sow.map((option) => (
+              {customOptions.sow?.map((option) => (
                 <option key={option.id} value={option.id}>
                   {option.name}
                 </option>

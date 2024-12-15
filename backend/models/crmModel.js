@@ -30,7 +30,7 @@ const salesCrmSchema = new mongoose.Schema({
   },
   statusOfRFQ: {
     type: String,
-    enum: ["Req Gathering","Yet to Quote","Quote Sent","PO Follow-up","Converted","Lost"],
+    enum: ["Requirement Gathering","Yet to Quote","Quote Sent","PO Follow-up","Converted","Lost"],
     required: true,
   },
   remarks: { type: [String], default: [] },
