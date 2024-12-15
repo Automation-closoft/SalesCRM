@@ -9,10 +9,10 @@ function Add() {
     rfqDate: '',
     typeOfCustomer: '',
     projectName: '',
-    sows: '',
+    sow: '',
     quotedValue: '',
     currency: '',
-    application: '',
+    applications: '',
     brands: '',
     expectedClosureMonth: '',
     natureOfRFQ: '',
@@ -22,7 +22,7 @@ function Add() {
 
   const [customOptions, setCustomOptions] = useState({
     typeOfCustomer: [],
-    sows: [],
+    sow: [],
     applications: [],
     brands: [],
   });
@@ -43,7 +43,7 @@ function Add() {
             id: item._id,
             name: item.name,
           })) || [],
-          sows: data.sows?.map((item) => ({
+          sow: data.sows?.map((item) => ({
             id: item._id,
             name: item.name,
           })) || [],
@@ -73,10 +73,10 @@ function Add() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ [name]: customValue }),
         });
-        const responseBody = await response.json(); // Get the response body for better insight
+        const responseBody = await response.json();
         if (response.ok) {
           alert(`${name} added successfully!`);
-          fetchOptions(name);
+          fetchDropdowns(name);
         } else {
           setError(`Failed to add new ${name}: ${responseBody.message || responseBody.error}`);
         }
@@ -103,7 +103,7 @@ function Add() {
           rfqDate: '',
           typeOfCustomer: '',
           projectName: '',
-          sows: '',
+          sow: '',
           quotedValue: '',
           currency: '',
           applications: '',
@@ -186,14 +186,14 @@ function Add() {
         <div className="form-row">
           <div className="select-container">
             <select name="sows" onChange={handleChange} value={formData.sows} required>
-              <option value="">Select SOWs</option>
-              {customOptions.sows.map((option) => (
+              <option value="">Select SOW</option>
+              {customOptions.sow.map((option) => (
                 <option key={option.id} value={option.id}>
                   {option.name}
                 </option>
               ))}
             </select>
-            <button type="button" onClick={() => handleAddCustomOption('sows')}>+ Add</button>
+            <button type="button" onClick={() => handleAddCustomOption('sow')}>+ Add</button>
           </div>
           <input
             name="quotedValue"

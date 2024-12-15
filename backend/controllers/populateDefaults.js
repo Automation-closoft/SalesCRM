@@ -164,21 +164,21 @@ const reportGen = async (req, res) => {
 
   const addCustomInput = async (req, res) => {
     try {
-      const { typeOfCustomer, application, sow, brand } = req.body;
+      const { typeOfCustomer, applications, sow, brands } = req.body;
       if (typeOfCustomer) {
         const newType = new TypeOfCustomer({ name: typeOfCustomer });
         await newType.save();
       }
-      if (application) {
-        const newApp = new Application({ name: application });
+      if (applications) {
+        const newApp = new Application({ name: applications });
         await newApp.save();
       }
       if (sow) {
         const newSow = new SOW({ name: sow });
         await newSow.save();
       }
-      if (brand) {
-        const newBrand = new Brand({ name: brand });
+      if (brands) {
+        const newBrand = new Brand({ name: brands });
         await newBrand.save();
       }
       res.status(200).json({ message: 'Custom inputs added successfully!' });
