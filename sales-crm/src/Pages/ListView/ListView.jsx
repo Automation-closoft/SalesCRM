@@ -108,6 +108,7 @@ const ListView = () => {
       </td>
       <td>{client.customerName}</td>
       <td>{client.typeOfCustomer}</td>
+      <td>{client.customerPOC}</td>
       <td>{client.projectName}</td>
       <td>{client.application}</td>
       <td>{client.customerLocation || "N/A"}</td>

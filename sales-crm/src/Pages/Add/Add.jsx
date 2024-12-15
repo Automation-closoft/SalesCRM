@@ -12,8 +12,8 @@ function Add() {
     sow: '',
     quotedValue: '',
     currency: '',
-    applications: '',
-    brands: '',
+    application: '',
+    brand: '',
     expectedClosureMonth: '',
     natureOfRFQ: '',
     statusOfRFQ: '',
@@ -23,8 +23,8 @@ function Add() {
   const [customOptions, setCustomOptions] = useState({
     typeOfCustomer: [],
     sow: [],
-    applications: [],
-    brands: [],
+    application: [],
+    brand: [],
   });
 
   const [error, setError] = useState('');
@@ -47,11 +47,11 @@ function Add() {
             id: item._id,
             name: item.name,
           })) || [],
-          applications: data.applications?.map((item) => ({
+          application: data.application?.map((item) => ({
             id: item._id,
             name: item.name,
           })) || [],
-          brands: data.brands?.map((item) => ({
+          brand: data.brand?.map((item) => ({
             id: item._id,
             name: item.name,
           })) || [],
@@ -85,7 +85,7 @@ function Add() {
       }
     }
   };  
-
+  console.log('Request Body:', JSON.stringify(formData));
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -106,8 +106,8 @@ function Add() {
           sow: '',
           quotedValue: '',
           currency: '',
-          applications: '',
-          brands: '',
+          application: '',
+          brand: '',
           expectedClosureMonth: '',
           natureOfRFQ: '',
           statusOfRFQ: '',
@@ -226,26 +226,26 @@ function Add() {
         </div>
         <div className="form-row">
           <div className="select-container">
-            <select name="applications" onChange={handleChange} value={formData.applications} required>
+            <select name="application" onChange={handleChange} value={formData.application} required>
               <option value="">Select Application</option>
-              {customOptions.applications.map((option) => (
+              {customOptions.application?.map((option) => (
                 <option key={option.id} value={option.id}>
                   {option.name}
                 </option>
               ))}
             </select>
-            <button type="button" onClick={() => handleAddCustomOption('applications')}>+ Add</button>
+            <button type="button" onClick={() => handleAddCustomOption('application')}>+ Add</button>
           </div>
           <div className="select-container">
-            <select name="brands" onChange={handleChange} value={formData.brands} required>
+            <select name="brand" onChange={handleChange} value={formData.brand} required>
               <option value="">Select Brand</option>
-              {customOptions.brands.map((option) => (
+              {customOptions.brand?.map((option) => (
                 <option key={option.id} value={option.id}>
                   {option.name}
                 </option>
               ))}
             </select>
-            <button type="button" onClick={() => handleAddCustomOption('brands')}>+ Add</button>
+            <button type="button" onClick={() => handleAddCustomOption('brand')}>+ Add</button>
           </div>
         </div>
         <div className="form-row">

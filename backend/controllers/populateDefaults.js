@@ -117,15 +117,15 @@ const updateClientStatus = async (req, res) => {
 const getDropdownData = async (req, res) => {
   try {
     const typeOfCustomers = await TypeOfCustomer.find();
-    const applications = await Application.find();
+    const application = await Application.find();
     const sows = await SOW.find();
-    const brands = await Brand.find();
+    const brand = await Brand.find();
     res.status(200).json({
       success: true,
       typeOfCustomers,
-      applications,
+      application,
       sows,
-      brands,
+      brand,
     });
   } catch (error) {
     res.status(500).json({ success: false, message: "Error fetching dropdown data" });
@@ -164,21 +164,21 @@ const reportGen = async (req, res) => {
 
   const addCustomInput = async (req, res) => {
     try {
-      const { typeOfCustomer, applications, sow, brands } = req.body;
+      const { typeOfCustomer, application, sow, brand } = req.body;
       if (typeOfCustomer) {
         const newType = new TypeOfCustomer({ name: typeOfCustomer });
         await newType.save();
       }
-      if (applications) {
-        const newApp = new Application({ name: applications });
+      if (application) {
+        const newApp = new Application({ name: application });
         await newApp.save();
       }
       if (sow) {
         const newSow = new SOW({ name: sow });
         await newSow.save();
       }
-      if (brands) {
-        const newBrand = new Brand({ name: brands });
+      if (brand) {
+        const newBrand = new Brand({ name: brand });
         await newBrand.save();
       }
       res.status(200).json({ message: 'Custom inputs added successfully!' });

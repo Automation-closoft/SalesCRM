@@ -10,7 +10,7 @@ const SalesReport = ({ onReportGenerated }) => {
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState("Jan");
   const [quarter, setQuarter] = useState(1);
-  const [halfYear, setHalfYear] = useState(1);  
+  const [halfYear, setHalfYear] = useState(1);
   const [customStartDate, setCustomStartDate] = useState("");
   const [customEndDate, setCustomEndDate] = useState("");
   const [dropdownData, setDropdownData] = useState({
@@ -82,32 +82,44 @@ const SalesReport = ({ onReportGenerated }) => {
           body: JSON.stringify(params),
         }
       );
+
       if (!response.ok) {
         const errorMessage = await response.text();
         toast.error(`API Error: ${errorMessage}`);
         console.error("API Error:", errorMessage);
         return;
       }
+
       const data = await response.json();
       console.log("API Response Data:", data);
-      if (data.success) {
+
+      if (data.success && data.report.length > 0) {
         generatePDF(data.report);
         toast.success("Report generated successfully!");
       } else {
-        toast.error(data.message || "Failed to generate report.");
-        console.error("Error response:", data);
+        toast.error(data.message || "No data available for the selected criteria.");
+        console.error("Error response or empty data:", data);
       }
     } catch (error) {
       toast.error("Error generating report.");
       console.error("Fetch error:", error);
     }
   };
+
   const generatePDF = (reportData) => {
     const doc = new jsPDF();
     doc.setFontSize(20);
     doc.text("Sales CRM Report", 14, 20);
     doc.setFontSize(12);
     let y = 40;
+
+    if (reportData.length === 0) {
+      doc.text("No data available for the selected criteria.", 14, y);
+      doc.save(`sales_report_${new Date().toISOString()}.pdf`);
+      return;
+    }
+
+    // Executive Summary
     doc.text("1. Executive Summary", 14, y);
     y += 10;
     doc.text(
@@ -116,9 +128,10 @@ const SalesReport = ({ onReportGenerated }) => {
       y
     );
     y += 10;
+
     const totalRFQs = reportData.length;
     const totalQuotedValue = reportData.reduce(
-      (acc, entry) => acc + entry.quotedValue,
+      (acc, entry) => acc + (entry.quotedValue || 0),
       0
     );
     const totalConvertedRFQs = reportData.filter(
@@ -127,6 +140,7 @@ const SalesReport = ({ onReportGenerated }) => {
     const totalLostRFQs = reportData.filter(
       (entry) => entry.statusOfRFQ === "Lost"
     ).length;
+
     doc.text(`Total RFQs: ${totalRFQs}`, 14, y);
     y += 10;
     doc.text(`Total Quoted Value: ₹${totalQuotedValue}`, 14, y);
@@ -135,21 +149,27 @@ const SalesReport = ({ onReportGenerated }) => {
     y += 10;
     doc.text(`Lost RFQs: ${totalLostRFQs}`, 14, y);
     y += 20;
+
+    // Key Metrics Overview
     doc.text("2. Key Metrics Overview", 14, y);
     y += 10;
+
     doc.autoTable({
       head: [["Metric", "Value"]],
       body: [
         ["Total Customers Engaged", reportData.length],
-        ["Total Projects", new Set(reportData.map(entry => entry.projectName)).size],
+        ["Total Projects", new Set(reportData.map((entry) => entry.projectName)).size],
         ["Average Quoted Value", `₹${(totalQuotedValue / totalRFQs).toFixed(2)}`],
         ["RFQs by Status", ""],
       ],
       startY: y,
     });
     y += 30;
+
+    // RFQ Details
     doc.text("3. RFQ Details", 14, y);
     y += 10;
+
     doc.autoTable({
       head: [
         [
@@ -173,10 +193,12 @@ const SalesReport = ({ onReportGenerated }) => {
       ]),
       startY: y,
     });
+
     const pdfName = `sales_report_${new Date().toISOString()}.pdf`;
     doc.save(pdfName);
     onReportGenerated();
   };
+
   return (
     <div className="sales-report">
       <h1>Generate Sales Report</h1>
@@ -193,6 +215,7 @@ const SalesReport = ({ onReportGenerated }) => {
           <option value="custom">Custom</option>
         </select>
       </div>
+
       {reportType === "yearly" && (
         <div className="form-group">
           <label htmlFor="year">Select Year</label>
@@ -209,6 +232,7 @@ const SalesReport = ({ onReportGenerated }) => {
           </select>
         </div>
       )}
+
       {reportType === "quarterly" && (
         <div className="form-group">
           <label htmlFor="quarter">Select Quarter</label>
@@ -225,6 +249,7 @@ const SalesReport = ({ onReportGenerated }) => {
           </select>
         </div>
       )}
+
       {reportType === "half-yearly" && (
         <div className="form-group">
           <label htmlFor="half-year">Select Half-Year</label>
@@ -238,6 +263,7 @@ const SalesReport = ({ onReportGenerated }) => {
           </select>
         </div>
       )}
+
       {reportType === "custom" && (
         <>
           <div className="form-group">
@@ -260,9 +286,11 @@ const SalesReport = ({ onReportGenerated }) => {
           </div>
         </>
       )}
+
       <button onClick={handleGenerateReport}>Generate Report</button>
       <ToastContainer />
     </div>
   );
 };
+
 export default SalesReport;
