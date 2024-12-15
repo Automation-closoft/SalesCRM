@@ -3,9 +3,9 @@ const dropdownSchema = new mongoose.Schema({
   name: { type: String, required: true, unique: true, trim: true },
 });
 const TypeOfCustomer = mongoose.model("TypeOfCustomer", dropdownSchema, "typeOfCustomers");
-const Application = mongoose.model("Application", dropdownSchema, "applications");
+const Application = mongoose.model("Application", dropdownSchema, "application");
 const SOW = mongoose.model("SOW", dropdownSchema, "sow");
-const Brand = mongoose.model("Brand", dropdownSchema, "brands");
+const Brand = mongoose.model("Brand", dropdownSchema, "brand");
 const salesCrmSchema = new mongoose.Schema({
   customerName: { type: String, required: true, trim: true },
   customerLocation: { type: String, required: true },
@@ -20,8 +20,8 @@ const salesCrmSchema = new mongoose.Schema({
     enum: ["INR", "AED", "USD", "QAR", "SAR", "OMR", "KWD", "NGN", "ZAR", "MGA", "BHD", "IRR", "IQD", "JOD", "LBP", "TRY", "YER"],
     required: true,
   },
-  applications: { type: mongoose.Schema.Types.ObjectId, ref: "Application", required: true },
-  brands: { type: mongoose.Schema.Types.ObjectId, ref: "Brand", required: true },
+  application: { type: mongoose.Schema.Types.ObjectId, ref: "Application", required: true },
+  brand: { type: mongoose.Schema.Types.ObjectId, ref: "Brand", required: true },
   expectedClosureMonth: { type: String, required: true },
   natureOfRFQ: {
     type: String,
