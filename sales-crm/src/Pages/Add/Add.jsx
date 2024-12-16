@@ -180,7 +180,7 @@ function Add() {
             >
               <option value="">Select Type of Customer</option>
               {customOptions.typeOfCustomer.map((option) => (
-                <option key={option.id} value={option.id}>
+                <option key={option.id} value={option.name}>
                   {option.name}
                 </option>
               ))}
@@ -200,7 +200,7 @@ function Add() {
             <select name="sow" onChange={handleChange} value={formData.sow} required>
               <option value="">Select SOW</option>
               {customOptions.sow?.map((option) => (
-                <option key={option.id} value={option.id}>
+                <option key={option.id} value={option.name}>
                   {option.name}
                 </option>
               ))}
@@ -241,7 +241,7 @@ function Add() {
             <select name="application" onChange={handleChange} value={formData.application} required>
               <option value="">Select Application</option>
               {customOptions.application?.map((option) => (
-                <option key={option.id} value={option.id}>
+                <option key={option.id} value={option.name}>
                   {option.name}
                 </option>
               ))}
@@ -252,7 +252,7 @@ function Add() {
             <select name="brand" onChange={handleChange} value={formData.brand} required>
               <option value="">Select Brand</option>
               {customOptions.brand?.map((option) => (
-                <option key={option.id} value={option.id}>
+                <option key={option.id} value={option.name}>
                   {option.name}
                 </option>
               ))}
