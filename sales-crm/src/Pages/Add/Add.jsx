@@ -29,10 +29,24 @@ function Add() {
 
   const [error, setError] = useState('');
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  // const handleChange = (e) => {
+  //   setFormData({ ...formData, [e.target.name]: e.target.value });
+  // };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    // If the field is a dropdown, store the name of the selected option
+    if (customOptions[name]) {
+      const selectedOption = customOptions[name].find((option) => option.id === value);
+      setFormData({
+        ...formData,
+        [name]: selectedOption ? selectedOption.name : '',
+      });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
   const fetchDropdowns = async () => {
     try {
       const response = await fetch('https://salescrm-backend.onrender.com/api/salesCRM/dropdowns');
@@ -43,7 +57,7 @@ function Add() {
             id: item._id,
             name: item.name,
           })) || [],
-          sow: data.sows?.map((item) => ({
+          sow: data.sow?.map((item) => ({
             id: item._id,
             name: item.name,
           })) || [],
@@ -86,6 +100,7 @@ function Add() {
     }
   };  
   console.log('Request Body:', JSON.stringify(formData));
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
