@@ -29,7 +29,7 @@ const ReportsSection = () => {
         <div>
           <h3>Generated Report:</h3>
           <div>
-            {/* Displaying the generated report */}
+            {/* Executive Summary */}
             <h4>Executive Summary</h4>
             <p>Report Period: {generatedReport.reportPeriod}</p>
             <p>Total RFQs: {generatedReport.totalRFQs}</p>
@@ -37,11 +37,13 @@ const ReportsSection = () => {
             <p>Converted RFQs: {generatedReport.totalConvertedRFQs}</p>
             <p>Lost RFQs: {generatedReport.totalLostRFQs}</p>
 
+            {/* Key Metrics Overview */}
             <h4>Key Metrics Overview</h4>
             <p>Total Customers Engaged: {generatedReport.totalCustomersEngaged}</p>
             <p>Total Projects: {generatedReport.totalProjects}</p>
             <p>Average Quoted Value: ₹{generatedReport.averageQuotedValue}</p>
 
+            {/* RFQ Details */}
             <h4>RFQ Details</h4>
             <ul>
               {generatedReport.rfqDetails.map((entry, index) => (
