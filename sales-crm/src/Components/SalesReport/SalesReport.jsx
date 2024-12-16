@@ -4,6 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 import "./SalesReport.css";
+import logo from "../../assets/logo.png";
 
 const SalesReport = ({ onReportGenerated }) => {
   const [reportType, setReportType] = useState("yearly");
@@ -49,10 +50,9 @@ const SalesReport = ({ onReportGenerated }) => {
         toast.error(`API Error: ${errorMessage}`);
         return;
       }
-
       const data = await response.json();
       if (data.success && data.report.length > 0) {
-        setReportData(data.report); // Set report data for display
+        setReportData(data.report);
         toast.success("Report generated successfully!");
       } else {
         toast.error(data.message || "No data available for the selected criteria.");
@@ -66,15 +66,18 @@ const SalesReport = ({ onReportGenerated }) => {
     if (!reportData) return;
 
     const doc = new jsPDF();
+    const imgWidth = 100;
+    const imgHeight = 20;
     doc.setFontSize(20);
     doc.text("Sales CRM Report", 14, 20);
     doc.setFontSize(12);
     let y = 40;
-
-    // Executive Summary
+    const watermarkX = (doc.internal.pageSize.getWidth() - imgWidth) / 2;
+    const watermarkY = (doc.internal.pageSize.getHeight() - imgHeight) / 2;
+    doc.addImage(logo, "PNG", watermarkX, watermarkY, imgWidth, imgHeight, '', 'FAST');
+    doc.setFontSize(20);
     doc.text("1. Executive Summary", 14, y);
     y += 10;
-
     const totalRFQs = reportData.length;
     const totalQuotedValue = reportData.reduce(
       (acc, entry) => acc + (entry.quotedValue || 0),
@@ -164,6 +167,19 @@ const SalesReport = ({ onReportGenerated }) => {
 
       {reportType === "quarterly" && (
         <div className="form-group">
+          <label htmlFor="yearQuarter">Select Year</label>
+          <select
+            id="yearQuarter"
+            value={year}
+            onChange={(e) => setYear(e.target.value)}
+          >
+            {years.map((y) => (
+              <option key={y} value={y}>
+                {y}
+              </option>
+            ))}
+          </select>
+
           <label htmlFor="quarter">Select Quarter</label>
           <select
             id="quarter"
@@ -181,6 +197,19 @@ const SalesReport = ({ onReportGenerated }) => {
 
       {reportType === "half-yearly" && (
         <div className="form-group">
+          <label htmlFor="yearHalf">Select Year</label>
+          <select
+            id="yearHalf"
+            value={year}
+            onChange={(e) => setYear(e.target.value)}
+          >
+            {years.map((y) => (
+              <option key={y} value={y}>
+                {y}
+              </option>
+            ))}
+          </select>
+
           <label htmlFor="halfYear">Select Half-Year</label>
           <select id="halfYear" value={halfYear} onChange={(e) => setHalfYear(e.target.value)}>
             <option value={1}>Jan - Jun</option>
@@ -188,7 +217,6 @@ const SalesReport = ({ onReportGenerated }) => {
           </select>
         </div>
       )}
-
       {reportType === "custom" && (
         <div>
           <label htmlFor="customStartDate">Start Date</label>
@@ -198,7 +226,6 @@ const SalesReport = ({ onReportGenerated }) => {
             value={customStartDate}
             onChange={(e) => setCustomStartDate(e.target.value)}
           />
-
           <label htmlFor="customEndDate">End Date</label>
           <input
             type="date"

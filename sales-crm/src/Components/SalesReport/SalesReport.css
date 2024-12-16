@@ -101,3 +101,12 @@
 .sales-report .report-display button:hover {
   background-color: #218838;
 }
+
+.sales-report .watermark {
+  position: absolute;
+  opacity: 0.1;
+  font-size: 50px;
+  color: gray;
+  transform: rotate(-45deg);
+  z-index: -1;
+}
