@@ -5,17 +5,16 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const DetailedView = () => {
-  const { clientId } = useParams(); // Get clientId from route params
-  const [client, setClient] = useState(null); // Client data state
-  const [newRemark, setNewRemark] = useState(""); // State for new remark input
+  const { clientId } = useParams();
+  const [client, setClient] = useState(null);
+  const [newRemark, setNewRemark] = useState("");
   const [dropdownOptions, setDropdownOptions] = useState({
     typeOfCustomer: [],
     application: [],
     sow: [],
     brand: [],
-  }); // Dropdown options state
+  });
 
-  // Fetch dropdown options and client details on component mount
   useEffect(() => {
     const fetchDropdowns = async () => {
       try {
@@ -24,6 +23,7 @@ const DetailedView = () => {
         );
         if (response.ok) {
           const data = await response.json();
+
           setDropdownOptions({
             typeOfCustomer: data.typeOfCustomers?.map((item) => ({
               id: item._id,
@@ -66,10 +66,12 @@ const DetailedView = () => {
     fetchDropdowns();
     fetchClient();
   }, [clientId]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setClient((prevClient) => ({ ...prevClient, [name]: value }));
   };
+
   const handleSaveChanges = async () => {
     try {
       const response = await fetch(
@@ -87,7 +89,6 @@ const DetailedView = () => {
     }
   };
 
-  // Add a new remark to the client
   const handleAddRemark = async () => {
     if (!newRemark.trim()) {
       toast.error("Remark cannot be empty.");
@@ -108,14 +109,13 @@ const DetailedView = () => {
         ...prevClient,
         remarks: updatedRemarks,
       }));
-      setNewRemark(""); // Clear the input field
+      setNewRemark(""); // Clear the input field for new remark
       toast.success("Remark added successfully.");
     } catch (error) {
       toast.error("Error adding remark.");
     }
   };
 
-  // Show loading state until client data is fetched
   if (!client) {
     return <p>Loading client details...</p>;
   }
@@ -207,29 +207,13 @@ const DetailedView = () => {
           value={client.currency}
           onChange={handleInputChange}
         >
-          {[
-            "INR",
-            "AED",
-            "USD",
-            "QAR",
-            "SAR",
-            "OMR",
-            "KWD",
-            "NGN",
-            "ZAR",
-            "MGA",
-            "BHD",
-            "IRR",
-            "IQD",
-            "JOD",
-            "LBP",
-            "TRY",
-            "YER",
-          ].map((currency) => (
-            <option key={currency} value={currency}>
-              {currency}
-            </option>
-          ))}
+          {["INR", "AED", "USD", "QAR", "SAR", "OMR", "KWD", "NGN", "ZAR", "MGA", "BHD", "IRR", "IQD", "JOD", "LBP", "TRY", "YER"].map(
+            (currency) => (
+              <option key={currency} value={currency}>
+                {currency}
+              </option>
+            )
+          )}
         </select>
 
         <label>Nature of RFQ:</label>
@@ -251,14 +235,7 @@ const DetailedView = () => {
           value={client.statusOfRFQ}
           onChange={handleInputChange}
         >
-          {[
-            "Requirement gathering",
-            "Yet to Quote",
-            "Quote Sent",
-            "PO Follow-up",
-            "Converted",
-            "Lost",
-          ].map((status) => (
+          {["Requirement gathering", "Yet to Quote", "Quote Sent", "PO Follow-up", "Converted", "Lost"].map((status) => (
             <option key={status} value={status}>
               {status}
             </option>
