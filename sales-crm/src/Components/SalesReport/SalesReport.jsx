@@ -16,8 +16,39 @@ const SalesReport = ({ onReportGenerated }) => {
   const [customEndDate, setCustomEndDate] = useState("");
   const [reportData, setReportData] = useState(null); // Store report data for display
 
-  const years = [2022, 2023, 2024, 2025];
+  const years = [2022, 2023, 2024, 2025,2026,2027,2028,2029,2030];
   const quarters = [1, 2, 3, 4];
+  const calculateMetrics = (data) => {
+    const totalRFQs = data.length;
+    const totalQuotedValue = data.reduce(
+      (acc, entry) => acc + (entry.quotedValue || 0),
+      0
+    );
+    const totalConvertedRFQs = data.filter(
+      (entry) => entry.statusOfRFQ === "Converted"
+    ).length;
+    const totalLostRFQs = data.filter(
+      (entry) => entry.statusOfRFQ === "Lost"
+    ).length;
+
+    const uniqueCustomers = new Set(data.map((entry) => entry.customerName));
+    const totalCustomersEngaged = uniqueCustomers.size;
+
+    const uniqueProjects = new Set(data.map((entry) => entry.projectName));
+    const totalProjects = uniqueProjects.size;
+
+    const averageQuotedValue = totalRFQs > 0 ? totalQuotedValue / totalRFQs : 0;
+
+    return {
+      totalRFQs,
+      totalQuotedValue,
+      totalConvertedRFQs,
+      totalLostRFQs,
+      totalCustomersEngaged,
+      totalProjects,
+      averageQuotedValue,
+    };
+  };
 
   const handleGenerateReport = async () => {
     if (reportType === "custom" && (!customStartDate || !customEndDate)) {
@@ -78,25 +109,16 @@ const SalesReport = ({ onReportGenerated }) => {
     doc.setFontSize(20);
     doc.text("1. Executive Summary", 14, y);
     y += 10;
-    const totalRFQs = reportData.length;
-    const totalQuotedValue = reportData.reduce(
-      (acc, entry) => acc + (entry.quotedValue || 0),
-      0
-    );
-    const totalConvertedRFQs = reportData.filter(
-      (entry) => entry.statusOfRFQ === "Converted"
-    ).length;
-    const totalLostRFQs = reportData.filter(
-      (entry) => entry.statusOfRFQ === "Lost"
-    ).length;
 
-    doc.text(`Total RFQs: ${totalRFQs}`, 14, y);
+    const metrics = calculateMetrics(reportData);
+
+    doc.text(`Total RFQs: ${metrics.totalRFQs}`, 14, y);
     y += 10;
-    doc.text(`Total Quoted Value: ₹${totalQuotedValue}`, 14, y);
+    doc.text(`Total Quoted Value: ₹${metrics.totalQuotedValue}`, 14, y);
     y += 10;
-    doc.text(`Converted RFQs: ${totalConvertedRFQs}`, 14, y);
+    doc.text(`Converted RFQs: ${metrics.totalConvertedRFQs}`, 14, y);
     y += 10;
-    doc.text(`Lost RFQs: ${totalLostRFQs}`, 14, y);
+    doc.text(`Lost RFQs: ${metrics.totalLostRFQs}`, 14, y);
     y += 20;
 
     // RFQ Details
@@ -129,6 +151,20 @@ const SalesReport = ({ onReportGenerated }) => {
 
     const pdfName = `sales_report_${new Date().toISOString()}.pdf`;
     doc.save(pdfName);
+  };
+  const getReportPeriod = () => {
+    if (reportType === "yearly") {
+      return `Year: ${year}`;
+    }
+    if (reportType === "quarterly") {
+      return `Quarter: ${quarter}, Year: ${year}`;
+    }
+    if (reportType === "half-yearly") {
+      return `Half-Year: ${halfYear === 1 ? "Jan - Jun" : "Jul - Dec"}, Year: ${year}`;
+    }
+    if (reportType === "custom") {
+      return `Custom Period: ${customStartDate} to ${customEndDate}`;
+    }
   };
 
   return (
@@ -240,6 +276,19 @@ const SalesReport = ({ onReportGenerated }) => {
 
       {reportData && (
         <div className="report-display">
+          <h4>Executive Summary</h4>
+          <p>Report Period: {getReportPeriod()}</p>
+          <p>Total RFQs: {calculateMetrics(reportData).totalRFQs}</p>
+          <p>Total Quoted Value: ₹{calculateMetrics(reportData).totalQuotedValue}</p>
+          <p>Converted RFQs: {calculateMetrics(reportData).totalConvertedRFQs}</p>
+          <p>Lost RFQs: {calculateMetrics(reportData).totalLostRFQs}</p>
+
+          {/* Key Metrics Overview */}
+          <h4>Key Metrics Overview</h4>
+          <p>Total Customers Engaged: {calculateMetrics(reportData).totalCustomersEngaged}</p>
+          <p>Total Projects: {calculateMetrics(reportData).totalProjects}</p>
+          <p>Average Quoted Value: ₹{calculateMetrics(reportData).averageQuotedValue}</p>
+
           <h2>Generated Report</h2>
           <table className="report-table">
             <thead>
@@ -267,7 +316,6 @@ const SalesReport = ({ onReportGenerated }) => {
               ))}
             </tbody>
           </table>
-          <button onClick={downloadPDF}>Download Report</button>
         </div>
       )}
 
@@ -275,5 +323,4 @@ const SalesReport = ({ onReportGenerated }) => {
     </div>
   );
 };
-
 export default SalesReport;
