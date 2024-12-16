@@ -90,11 +90,20 @@ function Add() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('https://salescrm-backend.onrender.com/api/salesCRM/add',{
+      const response = await fetch('https://salescrm-backend.onrender.com/api/salesCRM/add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          typeOfCustomer: customOptions.typeOfCustomer.find(
+            (option) => option.id === formData.typeOfCustomer
+          )?.name,
+          sow: customOptions.sow.find((option) => option.id === formData.sow)?.name,
+          application: customOptions.application.find((option) => option.id === formData.application)?.name,
+          brand: customOptions.brand.find((option) => option.id === formData.brand)?.name,
+        }),
       });
+  
       if (response.ok) {
         alert('Entry added successfully!');
         setFormData({
@@ -121,6 +130,8 @@ function Add() {
       setError('An error occurred while submitting the form. Please try again.');
     }
   };
+  
+
   React.useEffect(() => {
     fetchDropdowns();
   }, []);
