@@ -6,53 +6,43 @@ import {
   SalesCrm,
 } from "../models/crmModel.js";
 import mongoose from "mongoose";
+
 const addClient = async (req, res) => {
   try {
-    // Check for required fields
     if (!req.body.customerName || !req.body.rfqDate || !req.body.projectName) {
       return res.status(400).json({ message: "Missing required fields" });
     }
-
-    // Fetch names based on IDs
     const typeOfCustomerName = await TypeOfCustomer.findById(req.body.typeOfCustomer).select('name').lean();
     const sowName = await SOW.findById(req.body.sow).select('name').lean();
     const applicationName = await Application.findById(req.body.application).select('name').lean();
     const brandName = await Brand.findById(req.body.brand).select('name').lean();
-
     if (!typeOfCustomerName || !sowName || !applicationName || !brandName) {
       return res.status(400).json({ message: "Invalid category ID(s) provided." });
     }
-
-    // Create a new SalesCrm entry with category names instead of IDs
     const client = new SalesCrm({
       customerName: req.body.customerName,
       customerLocation: req.body.customerLocation,
       customerPOC: req.body.customerPOC,
       rfqDate: req.body.rfqDate,
-      typeOfCustomer: typeOfCustomerName.name, // Store name
+      typeOfCustomer: typeOfCustomerName.name, // Store only the name
       projectName: req.body.projectName,
-      sow: sowName.name, // Store name
+      sow: sowName.name, // Store only the name
       quotedValue: req.body.quotedValue,
       currency: req.body.currency,
-      application: applicationName.name, // Store name
+      application: applicationName.name, // Store only the name
       expectedClosureMonth: req.body.expectedClosureMonth,
-      brand: brandName.name, // Store name
+      brand: brandName.name, // Store only the name
       natureOfRFQ: req.body.natureOfRFQ,
       statusOfRFQ: req.body.statusOfRFQ,
       remarks: req.body.remarks || [],
     });
-
-    // Save the client data
     const savedClient = await client.save();
-
-    // Respond with success message
     res.status(201).json({
       message: "Client added successfully!",
       data: savedClient,
     });
   } catch (error) {
     console.error("Error while adding client:", error);
-
     res.status(500).json({
       message: "Failed to add client",
       error: error.message,
