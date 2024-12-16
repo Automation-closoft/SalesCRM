@@ -6,45 +6,29 @@ import {
   SalesCrm,
 } from "../models/crmModel.js";
 import mongoose from "mongoose";
-
 const addClient = async (req, res) => {
   try {
-    // Check for required fields
     if (!req.body.customerName || !req.body.rfqDate || !req.body.projectName) {
       return res.status(400).json({ message: "Missing required fields" });
     }
-
-    // Fetch the names of the related models
-    const typeOfCustomerName = await TypeOfCustomer.findById(req.body.typeOfCustomer).select('name').lean();
-    const sowName = await SOW.findById(req.body.sow).select('name').lean();
-    const applicationName = await Application.findById(req.body.application).select('name').lean();
-    const brandName = await Brand.findById(req.body.brand).select('name').lean();
-
-    // Check if the related categories exist
-    if (!typeOfCustomerName || !sowName || !applicationName || !brandName) {
-      return res.status(400).json({ message: "Invalid category ID(s) provided." });
-    }
-
-    // Create a new SalesCrm document with only the names
     const client = new SalesCrm({
       customerName: req.body.customerName,
       customerLocation: req.body.customerLocation,
       customerPOC: req.body.customerPOC,
       rfqDate: req.body.rfqDate,
-      typeOfCustomer: typeOfCustomerName.name,  // Store only the name
+      typeOfCustomer: req.body.typeOfCustomer,
       projectName: req.body.projectName,
-      sow: sowName.name,  // Store only the name
+      sow: req.body.sow,
       quotedValue: req.body.quotedValue,
       currency: req.body.currency,
-      application: applicationName.name,  // Store only the name
+      application: req.body.application,
       expectedClosureMonth: req.body.expectedClosureMonth,
-      brand: brandName.name,  // Store only the name
+      brand: req.body.brand,
       natureOfRFQ: req.body.natureOfRFQ,
       statusOfRFQ: req.body.statusOfRFQ,
       remarks: req.body.remarks || [],
     });
 
-    // Save the client data
     const savedClient = await client.save();
 
     res.status(201).json({
@@ -53,13 +37,13 @@ const addClient = async (req, res) => {
     });
   } catch (error) {
     console.error("Error while adding client:", error);
+
     res.status(500).json({
       message: "Failed to add client",
       error: error.message,
     });
   }
 };
-
 
 const getAllClients = async (req, res) => {
   try {
