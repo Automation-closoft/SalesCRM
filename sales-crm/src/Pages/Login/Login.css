@@ -9,6 +9,7 @@
 .login .logo {
     width: max(20vw, 200px);
     margin-bottom: 20px;
+    margin-right: 100px;
 }
 
 .login-form {

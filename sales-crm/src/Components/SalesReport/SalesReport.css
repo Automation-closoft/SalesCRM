@@ -1,130 +1,149 @@
-.sales-report {
-  max-width: 900px;
-  margin: 20px auto;
-  padding: 25px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  font-family: 'Arial', sans-serif;
-  color: #333;
+body {
+  font-family: "Arial", sans-serif;
+  background-color: #f4f7fb;
+  margin: 0;
+  padding: 0;
 }
-.sales-report h1,
-.sales-report h2 {
+
+.list-container {
+  padding: 20px;
+  max-width: 90%;
+  margin: 30px auto;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+h2 {
   text-align: center;
-  color: #333;
   margin-bottom: 20px;
-  font-size: 24px;
-  font-weight: bold;
-}
-.sales-report .form-group {margin-bottom: 20px;}
-.sales-report label {
-  display: block;
-  margin-bottom: 8px;
+  font-size: 1.8rem;
+  color: #2c3e50;
   font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.client-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  background-color: #fafafa;
+  min-width: 1200px;
+}
+
+.client-table th,
+.client-table td {
+  padding: 12px 8px; /* Increased padding for a more comfortable look */
+  text-align: left;
+  vertical-align: middle;
+  font-size: 0.9rem; /* Slightly increased font size for readability */
+}
+
+.client-table th {
+  background-color: #3498db;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-bottom: 3px solid #ddd;
+}
+
+.client-table td {
+  border-bottom: 1px solid #ddd;
   color: #555;
 }
-.sales-report select,
-.sales-report input[type="date"] {
-  width: 100%;
-  padding: 12px 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 14px;
-  color: #333;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: border-color 0.3s ease;
-}
-.sales-report select:focus,
-.sales-report input[type="date"]:focus {
-  border-color: #007bff;
-  outline: none;
-}
-.sales-report button {
-  display: inline-block;
-  background-color: #007bff;
-  color: #fff;
-  padding: 12px 18px;
-  font-size: 16px;
-  font-weight: 600;
-  border: none;
-  border-radius: 5px;
+
+.client-table tr:hover {
+  background-color: #ecf0f1;
   cursor: pointer;
-  margin-top: 20px;
-  width: 100%;
-  text-align: center;
   transition: background-color 0.3s ease;
 }
-.sales-report button:hover { background-color: #0056b3;}
-.sales-report .report-display {
-  margin-top: 30px;
-  padding: 20px;
+
+.client-table tr:nth-child(even) {
   background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
-.sales-report .report-display h4,
-.sales-report .report-display h2 {
-  color: #333;
-  font-size: 20px;
-  font-weight: bold;
+
+select {
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 0.85rem;
+  background-color: #fff;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
-.sales-report .report-display p {
-  font-size: 16px;
-  color: #555;
-  line-height: 1.6;
-  margin-bottom: 10px;
+
+select:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
 }
-.sales-report .report-table {
-  width: 100%;
-  margin-top: 20px;
-  border-collapse: collapse;
+
+/* Adjustments for the 'Remarks' column */
+.client-table td.remarks {
+  min-width: 150px; /* Increased width for remarks column */
+  max-width: 300px; /* Increased width for remarks column */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  text-overflow: ellipsis;
+  white-space: normal;
+  font-style: italic; /* Styling remarks */
+  color: #777; /* Subtle text color */
 }
-.sales-report .report-table th,
-.sales-report .report-table td {
-  padding: 12px 15px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-  font-size: 14px;
-  color: #555;
-}
-.sales-report .report-table th {
-  background-color: #f4f4f4;
-  font-weight: 600;
-}
-.sales-report .report-table tbody tr:hover {background-color: #f9f9f9;}
-.sales-report .report-table td {color: #333;}
-.sales-report .report-table td:last-child {
-  text-align: center;
-}
-.sales-report .toast-container {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-}
-.sales-report .form-group select,
-.sales-report .form-group input[type="date"] {
-  margin-top: 5px;
-}
-.sales-report input[type="date"] {
-  padding: 12px 15px;
-}
-@media (max-width: 768px) {
-  .sales-report {padding: 15px;}
-  .sales-report h1,
-  .sales-report h2{font-size: 20px;}
-  .sales-report button {padding: 10px 15px;}
-  .sales-report .report-display {padding: 15px;}
-}
-.download-pdf {
-  background-color: #4CAF50;
+
+.delete-button {
+  background-color: #e74c3c;
   color: white;
   border: none;
-  padding: 10px 20px;
-  font-size: 16px;
+  padding: 8px 12px;
+  font-size: 0.9rem; /* Reduced size */
+  border-radius: 5px;
   cursor: pointer;
-  margin-top: 20px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
-.download-pdf:hover {
-  background-color: #45a049;
+
+.delete-button:hover {
+  background-color: #c0392b;
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .list-container {
+    padding: 15px;
+    margin: 15px auto;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .client-table th,
+  .client-table td {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+
+  .delete-button {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
+
+  .client-table {
+    font-size: 0.75rem;
+  }
+
+  .client-table td.remarks {
+    max-width: 200px; /* Adjusted for smaller screens */
+  }
+}
+
+.list-container {
+  overflow-x: auto;
+}
+
+.client-table {
+  min-width: 1200px; /* Ensuring the table width remains consistent */
 }

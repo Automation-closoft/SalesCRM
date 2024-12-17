@@ -89,18 +89,22 @@ function Add() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(customOptions.typeOfCustomer);
+    console.log(formData.typeOfCustomer);
+    const formattedDate = new Date(formData.rfqDate).toLocaleDateString('en-GB'); 
     try {
-      const response = await fetch('https://salescrm-backend.onrender.com/api/salesCRM/add', {
+      const response = await fetch('http://localhost:4000/api/salesCRM/add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          typeOfCustomer: customOptions.typeOfCustomer.find(
-            (option) => option.id === formData.typeOfCustomer
+          rfqDate: formattedDate,
+          typeOfCustomer: customOptions?.typeOfCustomer?.find(
+            (option) => option.name === formData.typeOfCustomer
           )?.name,
-          sow: customOptions.sow.find((option) => option.id === formData.sow)?.name,
-          application: customOptions.application.find((option) => option.id === formData.application)?.name,
-          brand: customOptions.brand.find((option) => option.id === formData.brand)?.name,
+          sow: customOptions?.sow?.find((option) => option.name === formData.sow)?.name,
+          application: customOptions?.application?.find((option) => option.name === formData.application)?.name,
+          brand: customOptions?.brand?.find((option) => option.name === formData.brand)?.name,
         }),
       });
   
@@ -124,12 +128,14 @@ function Add() {
           remarks: '',
         });
       } else {
-        setError('Failed to add the entry. Please check the inputs.');
+        const responseBody = await response.json();
+        setError(`Failed to add the entry: ${responseBody.message || 'Please check the inputs.'}`);
       }
     } catch (err) {
-      setError('An error occurred while submitting the form. Please try again.');
+      setError(`An error occurred while submitting the form. Please try again.`);
     }
   };
+  
   
 
   React.useEffect(() => {
