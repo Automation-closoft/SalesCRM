@@ -14,8 +14,7 @@ const SalesReport = ({ onReportGenerated }) => {
   const [halfYear, setHalfYear] = useState(1);
   const [customStartDate, setCustomStartDate] = useState("");
   const [customEndDate, setCustomEndDate] = useState("");
-  const [reportData, setReportData] = useState(null); // Store report data for display
-
+  const [reportData, setReportData] = useState(null);
   const years = [2022, 2023, 2024, 2025,2026,2027,2028,2029,2030];
   const quarters = [1, 2, 3, 4];
   const calculateMetrics = (data) => {
@@ -30,15 +29,11 @@ const SalesReport = ({ onReportGenerated }) => {
     const totalLostRFQs = data.filter(
       (entry) => entry.statusOfRFQ === "Lost"
     ).length;
-
     const uniqueCustomers = new Set(data.map((entry) => entry.customerName));
     const totalCustomersEngaged = uniqueCustomers.size;
-
     const uniqueProjects = new Set(data.map((entry) => entry.projectName));
     const totalProjects = uniqueProjects.size;
-
     const averageQuotedValue = totalRFQs > 0 ? totalQuotedValue / totalRFQs : 0;
-
     return {
       totalRFQs,
       totalQuotedValue,
@@ -49,13 +44,11 @@ const SalesReport = ({ onReportGenerated }) => {
       averageQuotedValue,
     };
   };
-
   const handleGenerateReport = async () => {
     if (reportType === "custom" && (!customStartDate || !customEndDate)) {
       toast.error("Please select both start and end dates.");
       return;
     }
-
     const params = {
       reportType,
       year,
@@ -65,7 +58,6 @@ const SalesReport = ({ onReportGenerated }) => {
       customStartDate,
       customEndDate,
     };
-
     try {
       const response = await fetch(
         "https://salescrm-backend.onrender.com/api/salesCRM/report",
@@ -75,7 +67,6 @@ const SalesReport = ({ onReportGenerated }) => {
           body: JSON.stringify(params),
         }
       );
-
       if (!response.ok) {
         const errorMessage = await response.text();
         toast.error(`API Error: ${errorMessage}`);
@@ -95,63 +86,124 @@ const SalesReport = ({ onReportGenerated }) => {
 
   const downloadPDF = () => {
     if (!reportData) return;
-
+  
     const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+  
+    // Add Watermark
     const imgWidth = 100;
     const imgHeight = 20;
-    doc.setFontSize(20);
-    doc.text("Sales CRM Report", 14, 20);
-    doc.setFontSize(12);
-    let y = 40;
-    const watermarkX = (doc.internal.pageSize.getWidth() - imgWidth) / 2;
-    const watermarkY = (doc.internal.pageSize.getHeight() - imgHeight) / 2;
+    const watermarkX = (pageWidth - imgWidth) / 2;
+    const watermarkY = (pageHeight - imgHeight) / 2;
+    const watermarkOpacity = 0.1; // Set transparency for the watermark
+  
     doc.addImage(logo, "PNG", watermarkX, watermarkY, imgWidth, imgHeight, '', 'FAST');
+    doc.setFillColor(255, 255, 255, watermarkOpacity); // Transparent fill
+  
+    // Add Title
+    doc.setFont("helvetica", "bold");
     doc.setFontSize(20);
+    doc.text("Sales CRM Report", pageWidth / 2, 20, { align: "center" });
+  
+    // Add Executive Summary
+    let y = 40;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
     doc.text("1. Executive Summary", 14, y);
     y += 10;
-
+  
     const metrics = calculateMetrics(reportData);
-
-    doc.text(`Total RFQs: ${metrics.totalRFQs}`, 14, y);
-    y += 10;
-    doc.text(`Total Quoted Value: ₹${metrics.totalQuotedValue}`, 14, y);
-    y += 10;
-    doc.text(`Converted RFQs: ${metrics.totalConvertedRFQs}`, 14, y);
-    y += 10;
-    doc.text(`Lost RFQs: ${metrics.totalLostRFQs}`, 14, y);
+  
+    // Render metrics
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(12);
+    doc.text(`• Total RFQs: ${metrics.totalRFQs}`, 14, y);
+    y += 8;
+    doc.text(`• Total Quoted Value: ${metrics.totalQuotedValue}`, 14, y); // No commas
+    y += 8;
+    doc.text(`• Converted RFQs: ${metrics.totalConvertedRFQs}`, 14, y);
+    y += 8;
+    doc.text(`• Lost RFQs: ${metrics.totalLostRFQs}`, 14, y);
     y += 20;
-
-    // RFQ Details
+  
+    // Add RFQ Details
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
     doc.text("2. RFQ Details", 14, y);
     y += 10;
-
-    doc.autoTable({
-      head: [
-        [
-          "Customer Name",
-          "Project Name",
-          "RFQ Date",
-          "Type of Customer",
-          "SOW",
-          "Quoted Value",
-          "Status",
-        ],
-      ],
-      body: reportData.map((entry) => [
+  
+    // Column headers
+    const headers = [
+      "Customer Name",
+      "Project Name",
+      "RFQ Date",
+      "Type of Customer",
+      "SOW",
+      "Quoted Value",
+      "Status",
+    ];
+  
+    const colWidths = [30, 30, 25, 30, 20, 25, 25];
+    let x = 14; // Starting X position for headers
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "bold");
+  
+    headers.forEach((header, index) => {
+      doc.text(header, x, y);
+      x += colWidths[index];
+    });
+  
+    y += 8;
+  
+    // Table content
+    doc.setFont("helvetica", "normal");
+    reportData.forEach((entry) => {
+      x = 14;
+      const row = [
         entry.customerName,
         entry.projectName,
-        entry.rfqDate,
+        new Date(entry.rfqDate).toLocaleDateString(),
         entry.typeOfCustomer,
         entry.sow,
-        `₹${entry.quotedValue}`,
+        `${entry.quotedValue}`, 
         entry.statusOfRFQ,
-      ]),
-      startY: y,
+      ];
+      row.forEach((cell, index) => {
+        doc.text(`${cell}`, x, y);
+        x += colWidths[index];
+      });
+      y += 8;
+  
+      if (y > pageHeight - 20) {
+        // Add new page if space runs out
+        doc.addPage();
+  
+        // Reapply watermark
+        doc.addImage(logo, "PNG", watermarkX, watermarkY, imgWidth, imgHeight, '', 'FAST');
+        y = 20;
+      }
     });
-
-    const pdfName = `sales_report_${new Date().toISOString()}.pdf`;
+  
+    // Add Footer
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFont("helvetica", "italic");
+      doc.setFontSize(10);
+      doc.setTextColor(150);
+      const footerText = `Page ${i} of ${pageCount}`;
+      const dateText = `Generated on ${new Date().toLocaleDateString()}`;
+      doc.text(footerText, pageWidth - 20, pageHeight - 10, { align: "right" });
+      doc.text(dateText, 14, pageHeight - 10);
+    }
+  
+    // Save the PDF
+    const pdfName = `Sales_Report_${new Date().toISOString().split("T")[0]}.pdf`;
     doc.save(pdfName);
   };
+  
+
   const getReportPeriod = () => {
     if (reportType === "yearly") {
       return `Year: ${year}`;
@@ -183,7 +235,6 @@ const SalesReport = ({ onReportGenerated }) => {
           <option value="custom">Custom</option>
         </select>
       </div>
-
       {reportType === "yearly" && (
         <div className="form-group">
           <label htmlFor="year">Select Year</label>
@@ -200,7 +251,6 @@ const SalesReport = ({ onReportGenerated }) => {
           </select>
         </div>
       )}
-
       {reportType === "quarterly" && (
         <div className="form-group">
           <label htmlFor="yearQuarter">Select Year</label>
@@ -215,7 +265,6 @@ const SalesReport = ({ onReportGenerated }) => {
               </option>
             ))}
           </select>
-
           <label htmlFor="quarter">Select Quarter</label>
           <select
             id="quarter"
@@ -230,7 +279,6 @@ const SalesReport = ({ onReportGenerated }) => {
           </select>
         </div>
       )}
-
       {reportType === "half-yearly" && (
         <div className="form-group">
           <label htmlFor="yearHalf">Select Year</label>
@@ -245,7 +293,6 @@ const SalesReport = ({ onReportGenerated }) => {
               </option>
             ))}
           </select>
-
           <label htmlFor="halfYear">Select Half-Year</label>
           <select id="halfYear" value={halfYear} onChange={(e) => setHalfYear(e.target.value)}>
             <option value={1}>Jan - Jun</option>
@@ -271,9 +318,7 @@ const SalesReport = ({ onReportGenerated }) => {
           />
         </div>
       )}
-
       <button onClick={handleGenerateReport}>Generate Report</button>
-
       {reportData && (
         <div className="report-display">
           <h4>Executive Summary</h4>
@@ -282,13 +327,10 @@ const SalesReport = ({ onReportGenerated }) => {
           <p>Total Quoted Value: ₹{calculateMetrics(reportData).totalQuotedValue}</p>
           <p>Converted RFQs: {calculateMetrics(reportData).totalConvertedRFQs}</p>
           <p>Lost RFQs: {calculateMetrics(reportData).totalLostRFQs}</p>
-
-          {/* Key Metrics Overview */}
           <h4>Key Metrics Overview</h4>
           <p>Total Customers Engaged: {calculateMetrics(reportData).totalCustomersEngaged}</p>
           <p>Total Projects: {calculateMetrics(reportData).totalProjects}</p>
           <p>Average Quoted Value: ₹{calculateMetrics(reportData).averageQuotedValue}</p>
-
           <h2>Generated Report</h2>
           <table className="report-table">
             <thead>
@@ -318,7 +360,7 @@ const SalesReport = ({ onReportGenerated }) => {
           </table>
         </div>
       )}
-
+      <button className="download-pdf" onClick={downloadPDF}>Download PDF</button>
       <ToastContainer />
     </div>
   );
