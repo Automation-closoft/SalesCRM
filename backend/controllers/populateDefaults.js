@@ -198,6 +198,40 @@ const reportGen = async (req, res) => {
   }
 };
 
+
+const generateCustomerTypeReport = async (req, res) => {
+  try {
+    const { typeOfCustomer } = req.body;
+
+    if (!typeOfCustomer) {
+      return res.status(400).json({
+        success: false,
+        message: "Customer type is required for generating the report.",
+      });
+    }
+
+    // Query to filter by typeOfCustomer
+    const query = { typeOfCustomer };
+
+    const report = await SalesCrm.find(query);
+
+    if (report.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No data found for the selected customer type.",
+      });
+    }
+
+    res.status(200).json({ success: true, report });
+  } catch (error) {
+    console.error("Error generating customer type report:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to generate report for customer type.",
+    });
+  }
+};
+
 const addCustomInput = async (req, res) => {
   try {
     const { typeOfCustomer, application, sow, brand } = req.body;
@@ -234,4 +268,5 @@ export {
   getDropdownData,
   reportGen,
   addCustomInput,
+  generateCustomerTypeReport,
 };

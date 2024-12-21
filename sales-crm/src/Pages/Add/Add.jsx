@@ -63,6 +63,21 @@ function Add() {
       console.error('Error fetching dropdown data:', err);
     }
   };
+  const fetchExchangeRates = async (currency) => {
+    try {
+      const response = await fetch(`https://v6.exchangerate-api.com/v6/c4cbf919592283bb4d8e0f07/latest/${currency}`);
+      if (response.ok) {
+        const data = await response.json();
+        return data.conversion_rates.INR || 1; // Default to 1 if currency not found
+      } else {
+        throw new Error("Failed to fetch exchange rates");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error fetching exchange rates. Please check your network.");
+      return 1;
+    }
+  };
 
   const handleAddCustomOption = async (name) => {
     const customValue = prompt(`Add a new ${name}:`);
@@ -91,14 +106,16 @@ function Add() {
     e.preventDefault();
     console.log(customOptions.typeOfCustomer);
     console.log(formData.typeOfCustomer);
-    const formattedDate = new Date(formData.rfqDate).toLocaleDateString('en-GB'); 
+    const formattedDate = new Date(formData.rfqDate).toLocaleDateString('en-GB');
+    const conversionRate = await fetchExchangeRates(formData.currency);
+    const quotedValueInINR = formData.quotedValue * conversionRate;
     try {
       const response = await fetch('http://localhost:4000/api/salesCRM/add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          rfqDate: formattedDate,
+          quotedValue: quotedValueInINR,
           typeOfCustomer: customOptions?.typeOfCustomer?.find(
             (option) => option.name === formData.typeOfCustomer
           )?.name,
