@@ -31,8 +31,7 @@
 }
 
 .form-row input,
-.form-row select,
-.form-row textarea {
+.form-row select{
   width: 48%;
   padding: 0.8rem;
   border: 1px solid #ddd;
@@ -40,15 +39,27 @@
   font-size: 1rem;
   box-sizing: border-box;
 }
+.form-row textarea {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+.form-row label{
+  padding-top: 10px;
+}
 
 textarea {
-  height: 120px;
+  height: 80px;
 }
 
 input[type="date"],
 input[type="month"] {
   width: 48%;
 }
+
 
 button {
   background-color: #28a745;

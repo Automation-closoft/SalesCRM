@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import './Add.css';
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
+
 function Add() {
   const [formData, setFormData] = useState({
     customerName: '',
@@ -35,7 +38,7 @@ function Add() {
 
   const fetchDropdowns = async () => {
     try {
-      const response = await fetch('https://salescrm-backend.onrender.com/api/salesCRM/dropdowns');
+      const response = await fetch(`${apiUrl}/api/salesCRM/dropdowns`);
       if (response.ok) {
         const data = await response.json();
         setCustomOptions({
@@ -83,7 +86,7 @@ function Add() {
     const customValue = prompt(`Add a new ${name}:`);
     if (customValue) {
       try {
-        const response = await fetch(`https://salescrm-backend.onrender.com/api/salesCRM/add-custom-input`, {
+        const response = await fetch(`${apiUrl}/api/salesCRM/add-custom-input`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ [name]: customValue }),
@@ -100,7 +103,8 @@ function Add() {
       }
     }
   };  
-  console.log('Request Body:', JSON.stringify(formData));
+
+  // console.log('Request Body:', JSON.stringify(formData));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -110,7 +114,7 @@ function Add() {
     const conversionRate = await fetchExchangeRates(formData.currency);
     const quotedValueInINR = formData.quotedValue * conversionRate;
     try {
-      const response = await fetch('http://localhost:4000/api/salesCRM/add', {
+      const response = await fetch(`${apiUrl}/api/salesCRM/add`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -124,7 +128,6 @@ function Add() {
           brand: customOptions?.brand?.find((option) => option.name === formData.brand)?.name,
         }),
       });
-  
       if (response.ok) {
         alert('Entry added successfully!');
         setFormData({
@@ -284,6 +287,7 @@ function Add() {
           </div>
         </div>
         <div className="form-row">
+          <label htmlFor='expectedClosureMonth'>Expected Closure Month </label>
           <input
             type="month"
             name="expectedClosureMonth"

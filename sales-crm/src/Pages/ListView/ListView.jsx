@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import "./ListView.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+const apiUrl = import.meta.env.VITE_API_URL;
+
 
 const ListView = () => {
   const [clients, setClients] = useState([]);
@@ -13,7 +15,7 @@ const ListView = () => {
     const fetchClients = async () => {
       try {
         const response = await fetch(
-          "https://salescrm-backend.onrender.com/api/salesCRM/all"
+          `${apiUrl}/api/salesCRM/all`
         );
         if (!response.ok) throw new Error("Failed to fetch client data");
         const data = await response.json();
@@ -28,7 +30,7 @@ const ListView = () => {
   const handleStatusChange = async (id, newStatus) => {
     try {
       const response = await fetch(
-        `https://salescrm-backend.onrender.com/api/salesCRM/update/${id}`,
+        `${apiUrl}/api/salesCRM/update/${id}`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -54,7 +56,7 @@ const ListView = () => {
     if (!confirmDelete) return;
     try {
       const response = await fetch(
-        `https://salescrm-backend.onrender.com/api/salesCRM/${id}`,
+        `${apiUrl}/api/salesCRM/${id}`,
         {
           method: "DELETE",
         }

@@ -5,7 +5,7 @@ import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 import "./SalesReport.css";
 import logo from "../../assets/logo.png";
-
+const apiUrl = import.meta.env.VITE_API_URL;
 const SalesReport = ({ onReportGenerated }) => {
   const [reportType, setReportType] = useState("yearly");
   const [year, setYear] = useState(new Date().getFullYear());
@@ -17,14 +17,14 @@ const SalesReport = ({ onReportGenerated }) => {
   const [reportData, setReportData] = useState(null);
   const years = [2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030];
   const quarters = [1, 2, 3, 4];
-  const [filterType, setFilterType] = useState('typeOfCustomer');  // Example filter type state
-  const [typeOfCustomer, setTypeOfCustomer] = useState('all');  // Initialize state for selected customer type
-  const [typeOfCustomerOptions, setTypeOfCustomerOptions] = useState([]);  // State for dropdown options
+  const [filterType, setFilterType] = useState('date');
+  const [typeOfCustomer, setTypeOfCustomer] = useState();
+  const [typeOfCustomerOptions, setTypeOfCustomerOptions] = useState([]);
 
   const fetchDropdowns = async () => {
     try {
       if (filterType === 'typeOfCustomer') {
-        const response = await fetch('https://salescrm-backend.onrender.com/api/salesCRM/dropdowns');
+        const response = await fetch(`${apiUrl}/api/salesCRM/dropdowns`);
         if (response.ok) {
           const data = await response.json();
           setTypeOfCustomerOptions(data.typeOfCustomers || []);
@@ -78,20 +78,21 @@ const SalesReport = ({ onReportGenerated }) => {
       halfYear,
       customStartDate,
       customEndDate,
-      typeOfCustomer,
     };
-    if (filterType === "typeOfCustomer" && typeOfCustomer !== "all") {
-      params.typeOfCustomer = typeOfCustomer; 
-    }  
+  
+    let endpoint = `${apiUrl}/api/salesCRM/report`;
+    if (filterType === "typeOfCustomer") {
+      endpoint = `${apiUrl}/api/salesCRM/customer-type-report`;
+      if (typeOfCustomer && typeOfCustomer !== "all") {
+        params.typeOfCustomer = typeOfCustomer;
+      }
+    }
     try {
-      const response = await fetch(
-        "https://salescrm-backend.onrender.com/api/salesCRM/report",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(params),
-        }
-      );
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(params),
+      });
       if (!response.ok) {
         const errorMessage = await response.text();
         toast.error(`API Error: ${errorMessage}`);
@@ -105,10 +106,10 @@ const SalesReport = ({ onReportGenerated }) => {
         toast.error(data.message || "No data available for the selected criteria.");
       }
     } catch (error) {
-      toast.error("Error generating report.");
+      console.error("Error generating report:", error);
+      toast.error("Error generating report. Please try again later.");
     }
   };
-  
 
   const downloadCSV = () => {
     if (!reportData || reportData.length === 0) {
@@ -312,8 +313,6 @@ const SalesReport = ({ onReportGenerated }) => {
   return (
     <div className="sales-report">
       <h1>Generate Sales Report</h1>
-
-      {/* Filter Selection */}
       <div className="form-group">
         <label htmlFor="filterType">Select Filter Type</label>
         <select
@@ -438,7 +437,6 @@ const SalesReport = ({ onReportGenerated }) => {
             value={typeOfCustomer}  // Binding the value to state
             onChange={handleCustomerTypeChange}  // Update state on change
           >
-            <option value="all">All</option>
             {typeOfCustomerOptions.map((option) => (
               <option key={option._id} value={option.name}>
                 {option.name}
@@ -449,8 +447,6 @@ const SalesReport = ({ onReportGenerated }) => {
       )}
 
       <button onClick={handleGenerateReport}>Generate Report</button>
-
-      {/* Report Display */}
       {reportData && (
         <div className="report-display">
           <h4>Executive Summary</h4>
@@ -492,8 +488,6 @@ const SalesReport = ({ onReportGenerated }) => {
           </table>
         </div>
       )}
-
-      {/* Report Options (Download CSV and PDF) */}
       <div className="report-options">
         <button onClick={downloadCSV} disabled={!reportData}>
           Download CSV
