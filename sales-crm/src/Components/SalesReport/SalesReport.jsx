@@ -79,7 +79,7 @@ const SalesReport = ({ onReportGenerated }) => {
       customStartDate,
       customEndDate,
     };
-  
+
     let endpoint = `${apiUrl}/api/salesCRM/report`;
     if (filterType === "typeOfCustomer") {
       endpoint = `${apiUrl}/api/salesCRM/customer-type-report`;
@@ -144,11 +144,11 @@ const SalesReport = ({ onReportGenerated }) => {
 
     // Map the report data to rows
     const rows = reportData.map((entry) => [
-      entry.customerName || "N/A",
-      entry.projectName || "N/A",
-      entry.rfqDate ? new Date(entry.rfqDate).toLocaleDateString() : "N/A",
-      entry.quotedValue !== undefined ? entry.quotedValue.toLocaleString() : "N/A",
-      entry.statusOfRFQ || "N/A",
+      `"${entry.customerName || "N/A"}"`,
+      `"${entry.projectName || "N/A"}"`,
+      `"${entry.rfqDate ? new Date(entry.rfqDate).toLocaleDateString() : "N/A"}"`,
+      `"${entry.quotedValue !== undefined ? entry.quotedValue.toLocaleString() : "N/A"}"`,
+      `"${entry.statusOfRFQ || "N/A"}"`,
     ]);
 
     // Combine summary, headers, and rows into a single CSV string
