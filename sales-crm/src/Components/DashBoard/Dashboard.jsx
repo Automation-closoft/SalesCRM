@@ -3,12 +3,11 @@ import { assets } from '../../assets/assets';
 import { NavLink } from 'react-router-dom';
 import Add from '../../Pages/Add/Add';
 import ListView from '../../Pages/ListView/ListView';
+import DetailedView from '../../Pages/DetailedView/DetailedView';
 import './DashBoard.css';
 import ReportsSection from '../../Pages/ReportsSection/ReportsSection';
-
 const Dashboard = () => {
   const [selectedSection, setSelectedSection] = useState('add'); // Default to Add
-
   return (
     <div className='dashboard'>
       <div className='sidebar'>
@@ -31,9 +30,9 @@ const Dashboard = () => {
         {selectedSection === 'add' && <Add />}
         {selectedSection === 'list' && <ListView />}
         {selectedSection === 'reports' && <ReportsSection/>}
+        {selectedSection === '/' && <DetailedView/>}
       </div>
     </div>
   );
 };
-
 export default Dashboard;

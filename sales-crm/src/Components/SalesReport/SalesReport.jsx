@@ -142,7 +142,6 @@ const SalesReport = ({ onReportGenerated }) => {
       "Status",
     ];
 
-    // Map the report data to rows
     const rows = reportData.map((entry) => [
       `"${entry.customerName || "N/A"}"`,
       `"${entry.projectName || "N/A"}"`,
@@ -150,14 +149,10 @@ const SalesReport = ({ onReportGenerated }) => {
       `"${entry.quotedValue !== undefined ? entry.quotedValue.toLocaleString() : "N/A"}"`,
       `"${entry.statusOfRFQ || "N/A"}"`,
     ]);
-
-    // Combine summary, headers, and rows into a single CSV string
     const csvContent =
       summary.map((row) => row.join(",")).join("\n") +
       "\n" +
       [headers.join(",")].concat(rows.map((row) => row.join(","))).join("\n");
-
-    // Create a Blob and initiate the download
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
 

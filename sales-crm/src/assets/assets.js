@@ -2,6 +2,7 @@ import logo from './logo.png'
 import google from './google.png'
 import microsoft from './microsoft.png'
 import add from './add.png'
+import del from './delete.png'
 import list from './list.png'
 
 export const assets = {
@@ -9,5 +10,6 @@ export const assets = {
     google,
     microsoft,
     add,
-    list
+    list,
+    del
 };

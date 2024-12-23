@@ -244,6 +244,39 @@ button.download-pdf:hover {
 .Toastify__toast {
   font-size: 0.9rem;
 }
+.report-options {
+  display: flex;
+  justify-content: center; /* Center the buttons horizontally */
+  gap: 1rem; /* Add space between buttons */
+  margin: 1rem 0; /* Add some margin around the container */
+}
+
+.report-options button {
+  background-color: #007bff; /* Primary blue color */
+  color: white; /* White text color */
+  border: none; /* Remove default border */
+  padding: 0.75rem 1.5rem; /* Add padding for a nice size */
+  font-size: 1rem; /* Make the text legible */
+  font-weight: bold; /* Emphasize the button text */
+  border-radius: 0.5rem; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+}
+
+.report-options button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+  transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+.report-options button:disabled {
+  background-color: #cccccc; /* Gray for disabled state */
+  color: #666666; /* Dim text color for disabled state */
+  cursor: not-allowed; /* Show not-allowed cursor */
+}
+
+.report-options button:active {
+  transform: scale(0.95);
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {

@@ -1,49 +1,88 @@
-
+/* General Styles */
 body {
   font-family: "Arial", sans-serif;
   background-color: #f4f7fb;
   margin: 0;
   padding: 0;
+  color: #333;
 }
+
+/* Container */
 .list-container {
-  padding: 20px;
+  padding: 25px;
   max-width: 90%;
-  margin: 30px auto;
+  margin: 40px auto;
   background: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease;
   overflow-x: auto;
 }
+
+.list-container:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Heading */
 h2 {
   text-align: center;
-  margin-bottom: 20px;
-  font-size: 1.8rem;
+  margin-bottom: 25px;
+  font-size: 2rem;
   color: #2c3e50;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 10px;
 }
+
+/* Filters */
+.filters {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.filters select {
+  padding: 8px 12px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filters select:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+}
+
+/* Table */
 .client-table {
   width: 100%;
   border-collapse: collapse;
-  margin: 20px 0;
+  margin-top: 20px;
   background-color: #fafafa;
+  min-width: 1200px;
 }
 
 .client-table th,
 .client-table td {
-  padding: 10px 8px;
-  text-align: left;
+  padding: 12px 15px;
+  text-align: center;
   vertical-align: middle;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
 }
 
 .client-table th {
   background-color: #3498db;
-  color: white;
-  font-weight: bold;
+  color: #ffffff;
+  font-weight: 700;
   text-transform: uppercase;
-  border-bottom: 3px solid #ddd;
+  border-bottom: 4px solid #ddd;
+  letter-spacing: 0.5px;
 }
 
 .client-table td {
@@ -60,12 +99,11 @@ h2 {
 .client-table tr:nth-child(even) {
   background-color: #f9f9f9;
 }
-
 select {
-  padding: 6px 10px;
+  padding: 8px 12px;
   border: 1px solid #ddd;
   border-radius: 5px;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   background-color: #fff;
   outline: none;
   cursor: pointer;
@@ -76,38 +114,53 @@ select:focus {
   border-color: #3498db;
   box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
 }
-
-/* Delete Button Styling */
+/* Delete Button */
 .delete-button {
-  background-color: #e74c3c;
-  color: white;
+  background-color: transparent;
   border: none;
-  padding: 8px 12px;
-  font-size: 0.9rem; /* Reduced size */
+  padding: 5px;
+  font-size: 1.2rem;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .delete-button:hover {
-  background-color: #c0392b;
+  background-color: rgba(231, 76, 60, 0.1);
   transform: translateY(-2px);
 }
+
+/* Delete Icon */
+.delete-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .list-container {
     padding: 15px;
-    margin: 15px auto;
+    margin: 20px auto;
   }
 
   h2 {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
+  }
+
+  .filters {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
   }
 
   .client-table th,
   .client-table td {
-    padding: 8px 12px;
+    padding: 8px 10px;
     font-size: 0.8rem;
   }
 
@@ -118,13 +171,6 @@ select:focus {
 
   .client-table {
     font-size: 0.75rem;
+    min-width: 800px;
   }
-}
-
-.list-container {
-  overflow-x: auto;
-}
-
-.client-table {
-  min-width: 1200px; 
 }

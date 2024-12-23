@@ -3,6 +3,7 @@
   import "./DetailedView.css";
   import { ToastContainer, toast } from "react-toastify";
   import "react-toastify/dist/ReactToastify.css";
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const DetailedView = () => {
     const { clientId } = useParams();
@@ -53,7 +54,7 @@
       const fetchClient = async () => {
         try {
           const response = await fetch(
-            `https://salescrm-backend.onrender.com/api/salesCRM/${clientId}`
+            `${apiUrl}/api/salesCRM/${clientId}`
           );
           if (!response.ok) throw new Error("Failed to fetch client details");
           const data = await response.json();
@@ -71,16 +72,13 @@
       const { name, value } = e.target;
       setClient((prevClient) => ({ ...prevClient, [name]: value }));
     };
-
     const handleSaveChanges = async () => {
       try {
-        // Prevent duplicate remarks by ensuring the current state does not already contain the remark.
-        const updatedRemarks = client.remarks.filter(
-          (remark, index, self) => self.indexOf(remark) === index
-        );
+        // Ensure no duplicates in the remarks before saving
+        const updatedRemarks = [...new Set(client.remarks)];
     
         const response = await fetch(
-          `https://salescrm-backend.onrender.com/api/salesCRM/update/${clientId}`,
+          `${apiUrl}/api/salesCRM/update/${clientId}`,
           {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
@@ -95,7 +93,6 @@
       }
     };
     
-
     const handleAddRemark = async () => {
       if (!newRemark.trim()) {
         toast.error("Remark cannot be empty.");
@@ -121,17 +118,18 @@
           }
         );
         if (!response.ok) throw new Error("Failed to add remark");
-        
+    
         setClient((prevClient) => ({
           ...prevClient,
           remarks: updatedRemarks,
         }));
-        setNewRemark(""); 
+        setNewRemark("");
         toast.success("Remark added successfully.");
       } catch (error) {
         toast.error("Error adding remark.");
       }
     };
+    
     
 
     if (!client) {
