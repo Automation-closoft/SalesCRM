@@ -135,12 +135,12 @@ const ListView = () => {
             }}
             value={sortBy}
           >
-            <option value="">None</option>
+            {/* <option value="">None</option> */}
+            <option value="status">Forecast Status</option>
             <option value="date-asc">Date Added (Ascending)</option>
             <option value="date-desc">Date Added (Descending)</option>
             <option value="project-asc">Project Name (Ascending)</option>
             <option value="project-desc">Project Name (Descending)</option>
-            <option value="status">Forecast Status</option>
           </select>
         </div>
         <button

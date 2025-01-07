@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './Add.css';
 
 const apiUrl = import.meta.env.VITE_API_URL;
+const currApiUrl = import.meta.env.VITE_EXCHANGE_RATE_API;
 
 
 function Add() {
@@ -66,9 +67,10 @@ function Add() {
       console.error('Error fetching dropdown data:', err);
     }
   };
+  
   const fetchExchangeRates = async (currency) => {
     try {
-      const response = await fetch(`https://v6.exchangerate-api.com/v6/c4cbf919592283bb4d8e0f07/latest/${currency}`);
+      const response = await fetch(`${currApiUrl}/${currency}`);
       if (response.ok) {
         const data = await response.json();
         return data.conversion_rates.INR || 1; // Default to 1 if currency not found

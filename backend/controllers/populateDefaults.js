@@ -6,6 +6,7 @@ import {
   SalesCrm,
 } from "../models/crmModel.js";
 import mongoose from "mongoose";
+
 const addClient = async (req, res) => {
   try {
     if (!req.body.customerName || !req.body.rfqDate || !req.body.projectName) {
@@ -153,6 +154,57 @@ const getDropdownData = async (req, res) => {
   }
 };
 
+const deleteDropdownValue = async (req, res) => {
+  const { category, name } = req.params;
+
+  console.log("Received DELETE request for category:", category, "Name:", name);
+
+  // Map categories to their corresponding models
+  const categoryModelMap = {
+    typeOfCustomer: TypeOfCustomer,
+    application: Application,
+    sow: SOW,
+    brand: Brand,
+  };
+
+  // Retrieve the model corresponding to the category
+  const Model = categoryModelMap[category];
+
+  if (!Model) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid category specified",
+    });
+  }
+
+  try {
+    // Attempt to find and delete the item by name
+    const deletedItem = await Model.findOneAndDelete({ name: name });
+    
+    // If no item is found, return a 404 error
+    if (!deletedItem) {
+      return res.status(404).json({
+        success: false,
+        message: `${category} item with name "${name}" not found`,
+      });
+    }
+
+    // Return success response with deleted item details
+    res.status(200).json({
+      success: true,
+      message: `${category} item deleted successfully`,
+      deletedItem,
+    });
+  } catch (err) {
+    console.error("Error deleting dropdown value:", err);
+    res.status(500).json({
+      success: false,
+      message: "Error deleting dropdown value",
+    });
+  }
+};
+
+
 const reportGen = async (req, res) => {
   try {
     const { reportType, year, month, quarter, customStartDate, customEndDate } =
@@ -269,4 +321,5 @@ export {
   reportGen,
   addCustomInput,
   generateCustomerTypeReport,
+  deleteDropdownValue,
 };

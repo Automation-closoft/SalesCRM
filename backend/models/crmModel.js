@@ -62,17 +62,17 @@ const salesCrmSchema = new mongoose.Schema({
   customerLocation: { type: String, required: true },
   customerPOC: { type: String, required: true },
   rfqDate: { type: Date, required: true },
-  typeOfCustomer: { type: String, required: true },  // Store name (String) instead of ObjectId
+  typeOfCustomer: { type: String, required: true },
   projectName: { type: String, required: true },
-  sow: { type: String, required: true },  // Store name (String) instead of ObjectId
+  sow: { type: String, required: true },
   quotedValue: { type: Number, required: true },
   currency: {
     type: String,
     enum: ["INR", "AED", "USD", "QAR", "SAR", "OMR", "KWD", "NGN", "ZAR", "MGA", "BHD", "IRR", "IQD", "JOD", "LBP", "TRY", "YER"],
     required: true,
   },
-  application: { type: String, required: true },  // Store name (String) instead of ObjectId
-  brand: { type: String, required: true },  // Store name (String) instead of ObjectId
+  application: { type: String, required: true },
+  brand: { type: String, required: true },
   expectedClosureMonth: { type: String, required: true },
   natureOfRFQ: {
     type: String,
@@ -88,13 +88,11 @@ const salesCrmSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-// Add indexes for optimization
 salesCrmSchema.index({ customerName: 1 });
 salesCrmSchema.index({ rfqDate: 1 });
 salesCrmSchema.index({ typeOfCustomer: 1 });
 salesCrmSchema.index({ application: 1 });
 
-// SalesCrm Model
 const SalesCrm = mongoose.models.SalesCrm || mongoose.model("SalesCrm", salesCrmSchema);
 
 export { SalesCrm, TypeOfCustomer, Application, SOW, Brand };
