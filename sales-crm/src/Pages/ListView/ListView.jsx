@@ -217,10 +217,11 @@ const ListView = () => {
                 </select>
               </td>
               <td>
-                {client.remarks.length > 0
-                  ? client.remarks[client.remarks.length - 1]
-                  : "N/A"}
-              </td>
+  {client.remarks.length > 0
+    ? client.remarks[client.remarks.length - 1].remark
+    : "N/A"}
+</td>
+
               <td>
                 <button
                   className="delete-button"

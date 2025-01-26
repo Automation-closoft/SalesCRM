@@ -110,8 +110,7 @@ function Add() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(customOptions.typeOfCustomer);
-    console.log(formData.typeOfCustomer);
+    console.log('Form Data:', formData);
     const formattedDate = new Date(formData.rfqDate).toLocaleDateString('en-GB');
     const conversionRate = await fetchExchangeRates(formData.currency);
     const quotedValueInINR = formData.quotedValue * conversionRate;
@@ -128,6 +127,7 @@ function Add() {
           sow: customOptions?.sow?.find((option) => option.name === formData.sow)?.name,
           application: customOptions?.application?.find((option) => option.name === formData.application)?.name,
           brand: customOptions?.brand?.find((option) => option.name === formData.brand)?.name,
+          remarks: formData.remarks ? [{ remark: formData.remarks }] : [],
         }),
       });
       if (response.ok) {
@@ -158,10 +158,9 @@ function Add() {
     }
   };
   
-  
-
   React.useEffect(() => {
     fetchDropdowns();
+    console.log('Form Data:', formData);
   }, []);
   return (
     <div className="add-container">

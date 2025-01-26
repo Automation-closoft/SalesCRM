@@ -24,7 +24,6 @@ connectDB();
 
 //API endpoints
 app.use("/api/salesCRM",salesRoutes)
-app.use('/api/options', optionsRoutes);
 
 app.get("/",(req,res)=>{
     res.send("API Working")

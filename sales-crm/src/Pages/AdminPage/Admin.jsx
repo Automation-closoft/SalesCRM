@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { assets } from "../../assets/assets";
+import "./Admin.css";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -74,10 +75,10 @@ const Admin = () => {
     : [];
 
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
+    <div className="admin-container">
       <h2>Admin Panel</h2>
 
-      <div style={{ marginBottom: "20px" }}>
+      <div className="dropdown-container">
         <label htmlFor="category-select">Select Category:</label>
         <select
           id="category-select"
@@ -85,11 +86,6 @@ const Admin = () => {
           onChange={(e) => {
             setSelectedCategory(e.target.value);
             setSelectedValue(""); // Reset selected value when category changes
-          }}
-          style={{
-            marginLeft: "10px",
-            padding: "5px",
-            fontSize: "14px",
           }}
         >
           <option value="">-- Select Category --</option>
@@ -102,17 +98,12 @@ const Admin = () => {
       </div>
 
       {selectedCategory && (
-        <div style={{ marginBottom: "20px" }}>
+        <div className="dropdown-container">
           <label htmlFor="value-select">Select Value:</label>
           <select
             id="value-select"
             value={selectedValue}
             onChange={(e) => setSelectedValue(e.target.value)}
-            style={{
-              marginLeft: "10px",
-              padding: "5px",
-              fontSize: "14px",
-            }}
           >
             <option value="">-- Select Value --</option>
             {currentOptions.length > 0 ? (
@@ -134,11 +125,7 @@ const Admin = () => {
             src={assets.del}
             alt="Delete"
             onClick={() => handleDelete(selectedValue)} // Passing the name to delete
-            style={{
-              cursor: "pointer",
-              width: "30px",
-              height: "30px",
-            }}
+            className="delete-icon"
           />
         </div>
       )}

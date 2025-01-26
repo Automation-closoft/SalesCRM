@@ -84,7 +84,14 @@ const salesCrmSchema = new mongoose.Schema({
     enum: ["Requirement Gathering", "Yet to Quote", "Quote Sent", "PO Follow-up", "Converted", "Lost"],
     required: true,
   },
-  remarks: { type: [String], default: [] },
+  remarks: {
+    type: [
+      {
+        remark: { type: String, required: true },
+      },
+    ],
+    default: [],
+  },  
   createdAt: { type: Date, default: Date.now },
 });
 

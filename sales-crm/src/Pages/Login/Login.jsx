@@ -1,54 +1,53 @@
 import React, { useState } from "react";
 import "./Login.css";
-import {
-  signup,
-  login,
-  googleLogin,
-  microsoftLogin,
-} from "../../firebase";
+import { signup, login, googleLogin, microsoftLogin } from "../../firebase";
 import { assets } from "../../assets/assets";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";  // Import Toastify
+import 'react-toastify/dist/ReactToastify.css';  // Import the Toastify CSS
 
 const Login = () => {
   const [currState, setCurrState] = useState("Sign Up");
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const navigate = useNavigate();
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
-    setError("");
 
     try {
       if (currState === "Sign Up") {
         await signup(userName, email, password);
+        toast.success("Account created successfully!");  // Success toast
       } else {
         await login(email, password);
+        toast.success("Login successful!");  // Success toast
         navigate("/dashboard");
       }
     } catch (err) {
-      setError(err.message || "An unexpected error occurred.");
+      toast.error(err.message || "An unexpected error occurred.");  // Error toast
     }
   };
 
   const handleGoogleLogin = async () => {
     try {
       await googleLogin();
+      toast.success("Google login successful!");  // Success toast
       navigate("/dashboard");
     } catch (err) {
-      setError(err.message || "Google Sign-In failed.");
+      toast.error(err.message || "Google Sign-In failed.");  // Error toast
     }
   };
 
   const handleMicrosoftLogin = async () => {
     try {
       await microsoftLogin();
+      toast.success("Microsoft login successful!");  // Success toast
       navigate("/dashboard");
     } catch (err) {
-      setError(err.message || "Microsoft Sign-In failed.");
+      toast.error(err.message || "Microsoft Sign-In failed.");  // Error toast
     }
   };
 
@@ -91,8 +90,6 @@ const Login = () => {
           {currState === "Sign Up" ? "Create Account" : "Login Now"}
         </button>
 
-        {error && <p className="error-message">{error}</p>}
-
         <div className="login-term">
           <input
             type="checkbox"
@@ -122,11 +119,14 @@ const Login = () => {
           <button type="button" onClick={handleGoogleLogin}>
             <img src={assets.google} alt="Google Icon" />
           </button>
-          <button type="button" onClick={handleMicrosoftLogin}>
+          {/* <button type="button" onClick={handleMicrosoftLogin}>
             <img src={assets.microsoft} alt="Microsoft Icon" />
-          </button>
+          </button> */}
         </div>
       </form>
+
+      {/* ToastContainer to render the toast messages */}
+      <ToastContainer position="top-center" autoClose={3000} hideProgressBar={true} />
     </div>
   );
 };
